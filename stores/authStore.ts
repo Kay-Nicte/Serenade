@@ -53,11 +53,13 @@ interface AuthState {
   isLoading: boolean;
   isProfileComplete: boolean;
   isVerified: boolean;
+  isPasswordRecovery: boolean;
   initialize: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
   signOut: () => Promise<void>;
   forceReset: () => void;
+  clearPasswordRecovery: () => void;
 }
 
 // Supabase may return text[] as PostgreSQL literal "{val1,val2}" or as an array
@@ -95,6 +97,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoading: true,
   isProfileComplete: false,
   isVerified: false,
+  isPasswordRecovery: false,
 
   initialize: async () => {
     try {
@@ -113,10 +116,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Listen for auth changes
     supabase.auth.onAuthStateChange(async (event, session) => {
       set({ session, user: session?.user ?? null });
+      if (event === 'PASSWORD_RECOVERY') {
+        set({ isPasswordRecovery: true });
+      }
       if (session?.user) {
         await get().fetchProfile();
         if (event === 'USER_UPDATED' && session.user.email_confirmed_at) {
-          showToast(i18n.t('auth.emailVerified'), 'success');
+          showToast(i18n.t('auth.emailVerified'), 'success', 5000);
         }
       } else {
         set({ profile: null, isProfileComplete: false });
@@ -191,6 +197,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
     get().forceReset();
   },
+
+  clearPasswordRecovery: () => set({ isPasswordRecovery: false }),
 
   forceReset: () => {
     useProfileStore.getState().reset();

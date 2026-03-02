@@ -4,6 +4,7 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_700Bold_Italic } from '@expo-google-fonts/playfair-display';
 import { DMSans_400Regular, DMSans_500Medium, DMSans_600SemiBold, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
 import * as SplashScreen from 'expo-splash-screen';
+import * as Linking from 'expo-linking';
 import { StatusBar } from 'expo-status-bar';
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/hooks/useAuth';
@@ -13,6 +14,7 @@ import { useLocation } from '@/hooks/useLocation';
 import { usePresence } from '@/hooks/usePresence';
 import { useStreak } from '@/hooks/useStreak';
 import { initPurchases, identifyUser } from '@/lib/purchases';
+import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 import { useBlockStore } from '@/stores/blockStore';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
@@ -25,8 +27,24 @@ import '@/i18n';
 
 SplashScreen.preventAutoHideAsync();
 
+async function extractSessionFromUrl(url: string) {
+  if (!url.includes('reset-password')) return;
+
+  const parsed = new URL(url);
+  const fragment = parsed.hash.substring(1);
+  const params = new URLSearchParams(fragment);
+
+  const access_token = params.get('access_token');
+  const refresh_token = params.get('refresh_token');
+
+  if (access_token && refresh_token) {
+    await supabase.auth.setSession({ access_token, refresh_token });
+  }
+}
+
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { isLoading, isAuthenticated, isProfileComplete } = useAuth();
+  const isPasswordRecovery = useAuthStore((s) => s.isPasswordRecovery);
   const segments = useSegments();
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
@@ -38,6 +56,19 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     initPurchases();
+  }, []);
+
+  // Handle deep links for password recovery
+  useEffect(() => {
+    Linking.getInitialURL().then((url) => {
+      if (url) extractSessionFromUrl(url);
+    });
+
+    const subscription = Linking.addEventListener('url', (event) => {
+      extractSessionFromUrl(event.url);
+    });
+
+    return () => subscription.remove();
   }, []);
 
   useEffect(() => {
@@ -61,17 +92,21 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 
     const inAuthGroup = segments[0] === '(auth)';
     const inCompleteProfile = segments[0] === 'complete-profile';
+    const inResetPassword = segments[0] === 'reset-password';
     const inPublicScreen =
       segments[0] === 'terms-of-service' || segments[0] === 'privacy-policy';
 
-    if (!isAuthenticated && !inAuthGroup && !inPublicScreen) {
+    // During password recovery, always navigate to reset-password
+    if (isPasswordRecovery && isAuthenticated && !inResetPassword) {
+      router.replace('/reset-password');
+    } else if (!isAuthenticated && !inAuthGroup && !inPublicScreen) {
       router.replace('/(auth)/welcome');
-    } else if (isAuthenticated && !isProfileComplete && !inCompleteProfile) {
+    } else if (isAuthenticated && !isProfileComplete && !inCompleteProfile && !inResetPassword) {
       router.replace('/complete-profile');
     } else if (isAuthenticated && isProfileComplete && (inAuthGroup || inCompleteProfile)) {
       router.replace('/(tabs)');
     }
-  }, [isLoading, isAuthenticated, isProfileComplete, segments, isReady, router]);
+  }, [isLoading, isAuthenticated, isProfileComplete, isPasswordRecovery, segments, isReady, router]);
 
   if (isLoading) {
     return (
@@ -85,8 +120,8 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 }
 
 function GlobalToast() {
-  const { visible, message, variant, dismiss } = useToastStore();
-  return <Toast visible={visible} message={message} variant={variant} onDismiss={dismiss} />;
+  const { visible, message, variant, duration, dismiss } = useToastStore();
+  return <Toast visible={visible} message={message} variant={variant} duration={duration} onDismiss={dismiss} />;
 }
 
 function GlobalConfirmDialog() {

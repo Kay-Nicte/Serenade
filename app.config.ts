@@ -24,6 +24,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     package: 'com.ixabel.serenade',
+    googleServicesFile: './google-services.json',
     adaptiveIcon: {
       backgroundColor: '#E6A8B4',
       foregroundImage: './assets/images/android-icon-foreground.png',

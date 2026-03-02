@@ -439,18 +439,18 @@
     "not_sure": "Ez dakit"
   },
   "zodiac": {
-    "aries": "♈ Aharia",
-    "taurus": "♉ Zezena",
-    "gemini": "♊ Bikiak",
-    "cancer": "♋ Karranpa",
-    "leo": "♌ Lehoia",
-    "virgo": "♍ Birjina",
-    "libra": "♎ Balantza",
-    "scorpio": "♏ Eskorpioia",
-    "sagittarius": "♐ Sagitarioa",
-    "capricorn": "♑ Akerreta",
-    "aquarius": "♒ Akuarioa",
-    "pisces": "♓ Arrainak"
+    "aries": "Aharia",
+    "taurus": "Zezena",
+    "gemini": "Bikiak",
+    "cancer": "Karranpa",
+    "leo": "Lehoia",
+    "virgo": "Birjina",
+    "libra": "Balantza",
+    "scorpio": "Eskorpioia",
+    "sagittarius": "Sagitarioa",
+    "capricorn": "Akerreta",
+    "aquarius": "Akuarioa",
+    "pisces": "Arrainak"
   },
   "pets": {
     "dog": "Txakurra",

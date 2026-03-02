@@ -68,11 +68,22 @@ export default function TodayScreen() {
   const [iceBreakerModalVisible, setIceBreakerModalVisible] = useState(false);
   const [pendingLikesCount, setPendingLikesCount] = useState(0);
 
-  useEffect(() => {
+  const refreshPendingLikes = useCallback(() => {
     supabase.rpc('get_pending_likes').then(({ data }) => {
       if (Array.isArray(data)) setPendingLikesCount(data.length);
     });
   }, []);
+
+  // Refresh on tab focus and when currentProfile changes (after like/pass/superlike)
+  useFocusEffect(
+    useCallback(() => {
+      refreshPendingLikes();
+    }, [refreshPendingLikes])
+  );
+
+  useEffect(() => {
+    refreshPendingLikes();
+  }, [currentProfile, refreshPendingLikes]);
 
   useEffect(() => {
     if (reward && reward !== shownRewardRef.current) {

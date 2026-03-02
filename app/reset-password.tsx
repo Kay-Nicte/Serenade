@@ -15,6 +15,7 @@ import { Colors } from '@/constants/colors';
 import { Fonts } from '@/constants/fonts';
 import { supabase } from '@/lib/supabase';
 import { showToast } from '@/stores/toastStore';
+import { useAuthStore } from '@/stores/authStore';
 
 export default function ResetPasswordScreen() {
   const router = useRouter();
@@ -47,6 +48,7 @@ export default function ResetPasswordScreen() {
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
 
+      useAuthStore.getState().clearPasswordRecovery();
       showToast(t('auth.passwordUpdatedMessage'));
       router.replace('/(tabs)');
     } catch (e: unknown) {

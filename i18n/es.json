@@ -439,18 +439,18 @@
     "not_sure": "No lo tengo claro"
   },
   "zodiac": {
-    "aries": "♈ Aries",
-    "taurus": "♉ Tauro",
-    "gemini": "♊ Géminis",
-    "cancer": "♋ Cáncer",
-    "leo": "♌ Leo",
-    "virgo": "♍ Virgo",
-    "libra": "♎ Libra",
-    "scorpio": "♏ Escorpio",
-    "sagittarius": "♐ Sagitario",
-    "capricorn": "♑ Capricornio",
-    "aquarius": "♒ Acuario",
-    "pisces": "♓ Piscis"
+    "aries": "Aries",
+    "taurus": "Tauro",
+    "gemini": "Géminis",
+    "cancer": "Cáncer",
+    "leo": "Leo",
+    "virgo": "Virgo",
+    "libra": "Libra",
+    "scorpio": "Escorpio",
+    "sagittarius": "Sagitario",
+    "capricorn": "Capricornio",
+    "aquarius": "Acuario",
+    "pisces": "Piscis"
   },
   "pets": {
     "dog": "Perro",

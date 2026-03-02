@@ -205,16 +205,28 @@ export function ProfileCard({ profile, photos, activityLevel, lastSeen, showActi
         {(profile.zodiac || profile.height_cm || profile.hogwarts_house) && (
           <View style={styles.detailRow}>
             {profile.zodiac && (
-              <Text style={styles.detailText}>{t(`zodiac.${profile.zodiac}`)}</Text>
+              <View style={styles.detailItem}>
+                <Ionicons name="star-outline" size={14} color={Colors.primaryDark} />
+                <Text style={styles.detailText}>{t(`zodiac.${profile.zodiac}`)}</Text>
+              </View>
             )}
             {profile.zodiac_ascendant && (
-              <Text style={styles.detailText}>{t('profile.zodiacAscendant')}: {t(`zodiac.${profile.zodiac_ascendant}`)}</Text>
+              <View style={styles.detailItem}>
+                <Ionicons name="moon-outline" size={14} color={Colors.primaryDark} />
+                <Text style={styles.detailText}>{t(`zodiac.${profile.zodiac_ascendant}`)}</Text>
+              </View>
             )}
             {profile.height_cm && (
-              <Text style={styles.detailText}>{t('profile.heightCm', { cm: profile.height_cm })}</Text>
+              <View style={styles.detailItem}>
+                <Ionicons name="resize-outline" size={14} color={Colors.primaryDark} />
+                <Text style={styles.detailText}>{t('profile.heightCm', { cm: profile.height_cm })}</Text>
+              </View>
             )}
             {profile.hogwarts_house && (
-              <Text style={styles.detailText}>{t(`hogwarts.${profile.hogwarts_house}`)}</Text>
+              <View style={styles.detailItem}>
+                <Ionicons name="shield-outline" size={14} color={Colors.primaryDark} />
+                <Text style={styles.detailText}>{t(`hogwarts.${profile.hogwarts_house}`)}</Text>
+              </View>
             )}
           </View>
         )}
@@ -332,9 +344,14 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 12,
   },
+  detailItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
   detailText: {
     fontSize: 13,
-    fontFamily: Fonts.body,
+    fontFamily: Fonts.bodyMedium,
     color: Colors.textSecondary,
   },
   compatBadge: {

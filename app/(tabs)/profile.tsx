@@ -404,6 +404,7 @@ export default function ProfileScreen() {
             <View style={styles.info}>
               {profile?.hometown && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="location-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.hometown')}</Text>
                   <Text style={styles.infoValue}>{profile.hometown}</Text>
                 </View>
@@ -418,6 +419,7 @@ export default function ProfileScreen() {
                 }
                 return (
                   <View style={styles.infoRow}>
+                    <Ionicons name="calendar-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                     <Text style={styles.infoLabel}>{t('profile.age')}</Text>
                     <Text style={styles.infoValue}>{t('profile.ageValue', { age })}</Text>
                   </View>
@@ -425,6 +427,7 @@ export default function ProfileScreen() {
               })()}
               {ensureArray(profile?.orientation).length > 0 && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="heart-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.orientation')}</Text>
                   <Text style={styles.infoValue}>
                     {ensureArray(profile?.orientation).map((o) => t(`orientation.${o}`)).join(', ')}
@@ -433,6 +436,7 @@ export default function ProfileScreen() {
               )}
               {ensureArray(profile?.looking_for).length > 0 && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="compass-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.lookingFor')}</Text>
                   <Text style={styles.infoValue}>
                     {ensureArray(profile?.looking_for).map((lf) => t(`lookingFor.${lf}`)).join(', ')}
@@ -441,6 +445,7 @@ export default function ProfileScreen() {
               )}
               {ensureArray(profile?.interests).length > 0 && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="sparkles-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.interests')}</Text>
                   <Text style={styles.infoValue}>
                     {ensureArray(profile?.interests).map((i) => t(`interests.${i}`)).join(', ')}
@@ -449,30 +454,35 @@ export default function ProfileScreen() {
               )}
               {profile?.zodiac && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="star-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.zodiac')}</Text>
                   <Text style={styles.infoValue}>{t(`zodiac.${profile.zodiac}`)}</Text>
                 </View>
               )}
               {profile?.zodiac_ascendant && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="moon-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.zodiacAscendant')}</Text>
                   <Text style={styles.infoValue}>{t(`zodiac.${profile.zodiac_ascendant}`)}</Text>
                 </View>
               )}
               {profile?.height_cm && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="resize-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.height')}</Text>
                   <Text style={styles.infoValue}>{t('profile.heightCm', { cm: profile.height_cm })}</Text>
                 </View>
               )}
               {profile?.children && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="people-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.children')}</Text>
                   <Text style={styles.infoValue}>{t(`children.${profile.children}`)}</Text>
                 </View>
               )}
               {ensureArray(profile?.pets).length > 0 && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="paw-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.pets')}</Text>
                   <Text style={styles.infoValue}>
                     {ensureArray(profile?.pets).map((p) => t(`pets.${p}`)).join(', ')}
@@ -481,18 +491,21 @@ export default function ProfileScreen() {
               )}
               {profile?.smoking && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="leaf-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.smoking')}</Text>
                   <Text style={styles.infoValue}>{t(`smoking.${profile.smoking}`)}</Text>
                 </View>
               )}
               {profile?.drinking && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="wine-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.drinking')}</Text>
                   <Text style={styles.infoValue}>{t(`drinking.${profile.drinking}`)}</Text>
                 </View>
               )}
               {profile?.hogwarts_house && (
                 <View style={styles.infoRow}>
+                  <Ionicons name="shield-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.hogwartsHouse')}</Text>
                   <Text style={styles.infoValue}>{t(`hogwarts.${profile.hogwarts_house}`)}</Text>
                 </View>
@@ -1199,19 +1212,23 @@ const styles = StyleSheet.create({
   },
   info: {
     width: '100%',
-    gap: 8,
-    paddingTop: 8,
+    gap: 10,
+    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: Colors.borderLight,
   },
   infoRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 12,
+    alignItems: 'center',
+    gap: 10,
+  },
+  infoIcon: {
+    width: 20,
+    textAlign: 'center',
   },
   infoLabel: {
     fontSize: 14,
-    fontFamily: Fonts.bodyMedium,
+    fontFamily: Fonts.body,
     color: Colors.textSecondary,
   },
   infoValue: {
@@ -1220,6 +1237,7 @@ const styles = StyleSheet.create({
     color: Colors.text,
     flexShrink: 1,
     textAlign: 'right',
+    marginLeft: 'auto',
   },
   section: {
     gap: 10,

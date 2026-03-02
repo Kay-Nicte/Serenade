@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Tabs } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
+import { Tabs, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,40 +13,37 @@ import { supabase } from '@/lib/supabase';
 function useAdminPendingCount(isAdmin: boolean) {
   const [count, setCount] = useState(0);
 
-  useEffect(() => {
+  const fetchCounts = useCallback(async () => {
     if (!isAdmin) {
       setCount(0);
       return;
     }
+    try {
+      const [reportsRes, verificationsRes] = await Promise.all([
+        supabase.from('reports').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.rpc('admin_get_pending_verifications'),
+      ]);
 
-    let mounted = true;
-
-    const fetchCounts = async () => {
-      try {
-        const [reportsRes, verificationsRes] = await Promise.all([
-          supabase.from('reports').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
-          supabase.rpc('admin_get_pending_verifications'),
-        ]);
-
-        if (!mounted) return;
-
-        const reportCount = reportsRes.count ?? 0;
-        const verificationCount = Array.isArray(verificationsRes.data) ? verificationsRes.data.length : 0;
-        setCount(reportCount + verificationCount);
-      } catch {
-        // Non-critical
-      }
-    };
-
-    fetchCounts();
-
-    // Refresh every 60s
-    const interval = setInterval(fetchCounts, 60_000);
-    return () => {
-      mounted = false;
-      clearInterval(interval);
-    };
+      const reportCount = reportsRes.count ?? 0;
+      const verificationCount = Array.isArray(verificationsRes.data) ? verificationsRes.data.length : 0;
+      setCount(reportCount + verificationCount);
+    } catch {
+      // Non-critical
+    }
   }, [isAdmin]);
+
+  // Refresh on tab focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchCounts();
+    }, [fetchCounts])
+  );
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    const interval = setInterval(fetchCounts, 60_000);
+    return () => clearInterval(interval);
+  }, [isAdmin, fetchCounts]);
 
   return count;
 }
