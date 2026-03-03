@@ -142,11 +142,6 @@ export function ChatInput({ onSend, matchId, disabled, disabledMessage, isPremiu
       icon: 'camera-outline',
       onPress: handleImageFromCamera,
     },
-    {
-      label: 'GIF',
-      icon: 'film-outline',
-      onPress: () => setGifPickerVisible(true),
-    },
   ];
 
   const handleMicPress = async () => {
@@ -238,6 +233,15 @@ export function ChatInput({ onSend, matchId, disabled, disabledMessage, isPremiu
         ) : (
           <Ionicons name="image-outline" size={24} color={Colors.primary} />
         )}
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.imageButton}
+        onPress={() => setGifPickerVisible(true)}
+        disabled={isUploading}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="film-outline" size={24} color={Colors.primary} />
       </TouchableOpacity>
 
       <TextInput

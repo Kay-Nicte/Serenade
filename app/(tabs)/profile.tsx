@@ -73,6 +73,7 @@ export default function ProfileScreen() {
   );
 
   const isPremium = profile?.is_premium ?? false;
+  const isTrial = profile?.is_trial ?? false;
   const premiumUntil = profile?.premium_until ?? null;
   const isPaused = profile?.is_paused ?? false;
   const { availableBoosts, boostedUntil, secondsRemaining, activateBoost, fetch: fetchBoosts } = useBoostStore();
@@ -402,8 +403,8 @@ export default function ProfileScreen() {
               </TouchableOpacity>
             )}
 
-            {/* Premium Upsell — only when profile is complete or trial already used */}
-            {!isPremium && (isProfileFullyComplete || !!premiumUntil) && (
+            {/* Premium Upsell — visible for non-premium users and trial users */}
+            {(!isPremium || isTrial) && (
               <View style={styles.premiumUpsell}>
                 <Text style={styles.premiumUpsellTitle}>
                   {t('premium.upsellTitle')} {'✨'}

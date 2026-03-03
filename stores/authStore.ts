@@ -27,6 +27,7 @@ export interface Profile {
   is_profile_complete: boolean;
   is_admin: boolean;
   is_premium: boolean;
+  is_trial: boolean;
   premium_until: string | null;
   language_preference: string | null;
   interests: string[] | null;

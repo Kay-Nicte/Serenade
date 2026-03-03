@@ -32,18 +32,58 @@ export function AudioPlayer({ uri, isMine }: AudioPlayerProps) {
     setIsPlaying(false);
   }, []);
 
+  // Preload on mount to get duration immediately; reuse the same Sound on play
   useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: false,
+          playsInSilentModeIOS: true,
+        });
+        const { sound } = await Audio.Sound.createAsync(
+          { uri },
+          { shouldPlay: false },
+          (status) => {
+            if (!status.isLoaded || cancelled) return;
+            if (status.durationMillis) setDuration(status.durationMillis / 1000);
+            setPosition(status.positionMillis / 1000);
+            if (status.didJustFinish) {
+              setIsPlaying(false);
+              setPosition(0);
+              // stopAsync resets position to 0 without replaying
+              sound.stopAsync().catch(() => {});
+            }
+          }
+        );
+        if (cancelled) {
+          sound.unloadAsync().catch(() => {});
+          return;
+        }
+        soundRef.current = sound;
+        // Read duration from initial status
+        const status = await sound.getStatusAsync();
+        if (status.isLoaded && status.durationMillis) {
+          setDuration(status.durationMillis / 1000);
+        }
+      } catch {
+        // ignore load errors
+      }
+    })();
+
     return () => {
+      cancelled = true;
       if (soundRef.current) {
-        soundRef.current.unloadAsync().catch(() => {});
         if (activeSound === soundRef.current) {
           activeSound = null;
           activeStopCallback = null;
         }
+        soundRef.current.unloadAsync().catch(() => {});
         soundRef.current = null;
       }
     };
-  }, []);
+  }, [uri]);
 
   const handlePress = async () => {
     try {
@@ -59,35 +99,12 @@ export function AudioPlayer({ uri, isMine }: AudioPlayerProps) {
         activeStopCallback?.();
       }
 
-      if (!soundRef.current) {
-        await Audio.setAudioModeAsync({
-          allowsRecordingIOS: false,
-          playsInSilentModeIOS: true,
-        });
-
-        const { sound } = await Audio.Sound.createAsync(
-          { uri },
-          { shouldPlay: true },
-          (status) => {
-            if (!status.isLoaded) return;
-            setPosition(status.positionMillis / 1000);
-            setDuration(status.durationMillis ? status.durationMillis / 1000 : 0);
-            if (status.didJustFinish) {
-              setIsPlaying(false);
-              setPosition(0);
-              sound.setPositionAsync(0);
-            }
-          }
-        );
-
-        soundRef.current = sound;
-      } else {
+      if (soundRef.current) {
         await soundRef.current.playAsync();
+        activeSound = soundRef.current;
+        activeStopCallback = stopPlayback;
+        setIsPlaying(true);
       }
-
-      activeSound = soundRef.current;
-      activeStopCallback = stopPlayback;
-      setIsPlaying(true);
     } catch {
       // playback error — ignore
     }
