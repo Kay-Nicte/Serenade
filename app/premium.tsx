@@ -125,10 +125,11 @@ export default function PremiumScreen() {
     try {
       const premiumUntil = new Date();
       premiumUntil.setDate(premiumUntil.getDate() + days);
-      const { error } = await supabase.rpc('activate_premium_purchase', {
+      const { data, error } = await supabase.rpc('activate_premium_purchase', {
         premium_until_ts: premiumUntil.toISOString(),
       });
       if (error) throw new Error(error.message);
+      if (data?.error) throw new Error(data.error);
       fetchProfile(); // fire-and-forget, don't block navigation
       showToast(t('premium.codeSuccess'), 'success');
       router.back();
