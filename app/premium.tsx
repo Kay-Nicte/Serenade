@@ -131,7 +131,7 @@ export default function PremiumScreen() {
       if (error) throw new Error(error.message);
       if (data?.error) throw new Error(data.error);
       fetchProfile(); // fire-and-forget, don't block navigation
-      showToast(t('premium.codeSuccess'), 'success');
+      showToast(JSON.stringify(data), 'success');
       router.back();
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : t('premium.purchaseError');
