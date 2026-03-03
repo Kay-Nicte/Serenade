@@ -46,6 +46,8 @@ export default function SettingsScreen() {
     profile?.language_preference ?? i18n.language
   );
   const [languageExpanded, setLanguageExpanded] = useState(false);
+  const [pauseLoading, setPauseLoading] = useState(false);
+  const isPaused = profile?.is_paused ?? false;
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -95,6 +97,37 @@ export default function SettingsScreen() {
       await updateProfile({ language_preference: lang } as any);
     } catch {
       // profile update failed but language changed locally
+    }
+  };
+
+  const handleTogglePause = async (value: boolean) => {
+    if (value) {
+      showConfirm({
+        title: t('settings.pauseConfirmTitle'),
+        message: t('settings.pauseConfirmMessage'),
+        confirmLabel: t('settings.pauseProfile'),
+        onConfirm: async () => {
+          setPauseLoading(true);
+          try {
+            await supabase.rpc('set_profile_paused', { paused: true });
+            await useAuthStore.getState().fetchProfile();
+          } catch {
+            showToast(t('common.error'), 'error');
+          } finally {
+            setPauseLoading(false);
+          }
+        },
+      });
+    } else {
+      setPauseLoading(true);
+      try {
+        await supabase.rpc('set_profile_paused', { paused: false });
+        await useAuthStore.getState().fetchProfile();
+      } catch {
+        showToast(t('common.error'), 'error');
+      } finally {
+        setPauseLoading(false);
+      }
     }
   };
 
@@ -155,6 +188,38 @@ export default function SettingsScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
+        {/* Profile Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.profileSection')}</Text>
+          <View style={styles.card}>
+            <View style={[styles.row, isPaused && styles.rowPaused]}>
+              <Ionicons
+                name={isPaused ? 'pause-circle-outline' : 'pause-circle-outline'}
+                size={20}
+                color={isPaused ? Colors.warning : Colors.text}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.rowLabel, isPaused && { color: Colors.warning }]}>
+                  {t('settings.pauseProfile')}
+                </Text>
+                <Text style={styles.rowSubtitle}>
+                  {isPaused ? t('settings.resumeProfile') : t('settings.pauseProfileDesc')}
+                </Text>
+              </View>
+              {pauseLoading ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+              ) : (
+                <Switch
+                  value={isPaused}
+                  onValueChange={handleTogglePause}
+                  trackColor={{ false: Colors.border, true: Colors.warning }}
+                  thumbColor={Colors.surface}
+                />
+              )}
+            </View>
+          </View>
+        </View>
+
         {/* Account Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('settings.account')}</Text>
@@ -478,6 +543,16 @@ function makeStyles(c: ReturnType<typeof useColors>) {
       fontSize: 16,
       fontFamily: Fonts.body,
       color: c.text,
+    },
+    rowPaused: {
+      backgroundColor: '#FFF8E1',
+      borderRadius: 12,
+    },
+    rowSubtitle: {
+      fontSize: 12,
+      fontFamily: Fonts.body,
+      color: c.textTertiary,
+      marginTop: 1,
     },
     rowValue: {
       fontSize: 16,

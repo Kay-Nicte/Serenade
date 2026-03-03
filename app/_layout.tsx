@@ -18,6 +18,7 @@ import { initPurchases, identifyUser } from '@/lib/purchases';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 import { useBlockStore } from '@/stores/blockStore';
+import { useBoostStore } from '@/stores/boostStore';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { OfflineBanner } from '@/components/OfflineBanner';
 import { Toast } from '@/components/Toast';
@@ -79,6 +80,13 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       const session = useAuthStore.getState().session;
       if (session?.user?.id) {
         identifyUser(session.user.id);
+      }
+      // Boost: fetch current state and grant weekly boost if premium
+      const profile = useAuthStore.getState().profile;
+      if (profile?.is_premium) {
+        useBoostStore.getState().grantWeeklyIfNeeded();
+      } else {
+        useBoostStore.getState().fetch();
       }
     }
   }, [isAuthenticated]);
@@ -176,6 +184,7 @@ export default function RootLayout() {
           <Stack.Screen name="verify-identity" options={{ presentation: 'modal' }} />
           <Stack.Screen name="admin-verification" />
           <Stack.Screen name="premium" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="buy-boost" options={{ presentation: 'modal' }} />
         </Stack>
         <StatusBar style={statusBarStyle} />
       </AuthGuard>

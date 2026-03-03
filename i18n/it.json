@@ -97,7 +97,12 @@
     "hometownPlaceholder": "Es: Roma",
     "hometownSearching": "Ricerca...",
     "hometownNoResults": "Nessuna città trovata",
-    "hometownGpsError": "Impossibile rilevare la tua città"
+    "hometownGpsError": "Impossibile rilevare la tua città",
+    "boostTitle": "Boost del profilo",
+    "boostActive": "Boost attivo",
+    "boostActivate": "Attiva Boost",
+    "boostBuy": "Acquista Boost",
+    "pausedBanner": "Il tuo profilo è in pausa — tocca per riprendere"
   },
   "orientation": {
     "lesbian": "Lesbica",
@@ -353,7 +358,13 @@
     "version": "Versione",
     "blockedUsers": "Utenti bloccate",
     "signOut": "Esci",
-    "signOutConfirm": "Sei sicura di voler uscire?"
+    "signOutConfirm": "Sei sicura di voler uscire?",
+    "profileSection": "Profilo",
+    "pauseProfile": "Metti in pausa il profilo",
+    "resumeProfile": "Il tuo profilo è in pausa — tocca qui per riprendere",
+    "pauseProfileDesc": "Nascondi il tuo profilo alle nuove persone senza perdere i tuoi match",
+    "pauseConfirmTitle": "Mettere in pausa il tuo profilo?",
+    "pauseConfirmMessage": "Il tuo profilo sarà nascosto alle nuove persone. I tuoi match e le chat rimarranno intatti."
   },
   "changePassword": {
     "title": "Cambia password",
@@ -382,6 +393,7 @@
     "benefitIceBreaker": "1 rompighiaccio al giorno",
     "benefitReadReceipts": "Conferme di lettura nelle chat",
     "benefitLastSeen": "Vedi l'ultimo accesso delle altre",
+    "benefitBoost": "1 boost settimanale — appari prima per 30 min",
     "expiredTitle": "Il tuo premium è scaduto",
     "expiredMessage": "Non hai più accesso alle funzioni premium:",
     "renew": "Rinnova Premium",
@@ -412,6 +424,15 @@
     "redeem": "Riscatta",
     "codeSuccess": "Codice riscattato! Benvenuta in Premium!",
     "invalidCode": "Codice non valido. Controlla e riprova."
+  },
+  "boost": {
+    "title": "Boost del profilo",
+    "subtitle": "Appari prima nella scoperta per 30 minuti",
+    "x1": "1 Boost",
+    "x3": "3 Boost",
+    "activated": "Il tuo profilo è boostato!",
+    "errorNoBoosts": "Nessun boost disponibile",
+    "activateSuccess": "Boost attivato!"
   },
   "streak": {
     "title": "Serie giornaliera",

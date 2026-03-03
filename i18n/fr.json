@@ -97,7 +97,12 @@
     "hometownPlaceholder": "Ex : Paris",
     "hometownSearching": "Recherche...",
     "hometownNoResults": "Aucune ville trouvée",
-    "hometownGpsError": "Impossible de détecter ta ville"
+    "hometownGpsError": "Impossible de détecter ta ville",
+    "boostTitle": "Boost de profil",
+    "boostActive": "Boost actif",
+    "boostActivate": "Activer le Boost",
+    "boostBuy": "Acheter un Boost",
+    "pausedBanner": "Ton profil est en pause — appuie pour reprendre"
   },
   "orientation": {
     "lesbian": "Lesbienne",
@@ -353,7 +358,13 @@
     "version": "Version",
     "blockedUsers": "Utilisatrices bloquées",
     "signOut": "Se déconnecter",
-    "signOutConfirm": "Es-tu sûre de vouloir te déconnecter ?"
+    "signOutConfirm": "Es-tu sûre de vouloir te déconnecter ?",
+    "profileSection": "Profil",
+    "pauseProfile": "Mettre le profil en pause",
+    "resumeProfile": "Ton profil est en pause — appuie ici pour le reprendre",
+    "pauseProfileDesc": "Cache ton profil aux nouvelles personnes sans perdre tes matches",
+    "pauseConfirmTitle": "Mettre ton profil en pause ?",
+    "pauseConfirmMessage": "Ton profil sera caché aux nouvelles personnes. Tes matches et conversations resteront intacts."
   },
   "changePassword": {
     "title": "Changer le mot de passe",
@@ -382,6 +393,7 @@
     "benefitIceBreaker": "1 brise-glace par jour",
     "benefitReadReceipts": "Confirmations de lecture dans les chats",
     "benefitLastSeen": "Voir la dernière connexion des autres",
+    "benefitBoost": "1 boost hebdomadaire — apparais en premier pendant 30 min",
     "expiredTitle": "Ton abonnement Premium a expiré",
     "expiredMessage": "Tu n'as plus accès aux fonctionnalités premium :",
     "renew": "Renouveler Premium",
@@ -412,6 +424,15 @@
     "redeem": "Utiliser",
     "codeSuccess": "Code utilisé ! Bienvenue dans Premium !",
     "invalidCode": "Code invalide. Vérifie-le et réessaie."
+  },
+  "boost": {
+    "title": "Boost de profil",
+    "subtitle": "Apparais en premier dans la découverte pendant 30 minutes",
+    "x1": "1 Boost",
+    "x3": "3 Boosts",
+    "activated": "Ton profil est boosté !",
+    "errorNoBoosts": "Aucun boost disponible",
+    "activateSuccess": "Boost activé !"
   },
   "streak": {
     "title": "Série quotidienne",

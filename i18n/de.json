@@ -97,7 +97,12 @@
     "hometownPlaceholder": "z. B. Berlin",
     "hometownSearching": "Suche...",
     "hometownNoResults": "Keine Städte gefunden",
-    "hometownGpsError": "Deine Stadt konnte nicht erkannt werden"
+    "hometownGpsError": "Deine Stadt konnte nicht erkannt werden",
+    "boostTitle": "Profil-Boost",
+    "boostActive": "Boost aktiv",
+    "boostActivate": "Boost aktivieren",
+    "boostBuy": "Boost kaufen",
+    "pausedBanner": "Dein Profil ist pausiert — tippe zum Fortsetzen"
   },
   "orientation": {
     "lesbian": "Lesbisch",
@@ -353,7 +358,13 @@
     "version": "Version",
     "blockedUsers": "Blockierte Nutzerinnen",
     "signOut": "Abmelden",
-    "signOutConfirm": "Bist du sicher, dass du dich abmelden möchtest?"
+    "signOutConfirm": "Bist du sicher, dass du dich abmelden möchtest?",
+    "profileSection": "Profil",
+    "pauseProfile": "Profil pausieren",
+    "resumeProfile": "Dein Profil ist pausiert — tippe hier zum Fortsetzen",
+    "pauseProfileDesc": "Verstecke dein Profil vor neuen Personen, ohne deine Matches zu verlieren",
+    "pauseConfirmTitle": "Profil pausieren?",
+    "pauseConfirmMessage": "Dein Profil wird für neue Personen versteckt. Deine Matches und Chats bleiben erhalten."
   },
   "changePassword": {
     "title": "Passwort ändern",
@@ -382,6 +393,7 @@
     "benefitIceBreaker": "1 Eisbrecher am Tag",
     "benefitReadReceipts": "Lesebestätigungen im Chat",
     "benefitLastSeen": "Letzte Aktivität der anderen sehen",
+    "benefitBoost": "1 wöchentlicher Boost — erscheine 30 Min. an erster Stelle",
     "expiredTitle": "Dein Premium ist abgelaufen",
     "expiredMessage": "Du hast keinen Zugriff mehr auf die Premium-Funktionen:",
     "renew": "Premium verlängern",
@@ -412,6 +424,15 @@
     "redeem": "Einlösen",
     "codeSuccess": "Code eingelöst! Willkommen bei Premium!",
     "invalidCode": "Ungültiger Code. Bitte überprüfe ihn und versuche es erneut."
+  },
+  "boost": {
+    "title": "Profil-Boost",
+    "subtitle": "Erscheine 30 Minuten lang zuerst in der Entdeckung",
+    "x1": "1 Boost",
+    "x3": "3 Boosts",
+    "activated": "Dein Profil ist geboostet!",
+    "errorNoBoosts": "Keine Boosts verfügbar",
+    "activateSuccess": "Boost aktiviert!"
   },
   "streak": {
     "title": "Tägliche Serie",

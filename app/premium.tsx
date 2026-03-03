@@ -157,6 +157,7 @@ export default function PremiumScreen() {
           <Benefit icon="chatbubble" color={Colors.primary} text={t('premium.benefitIceBreaker')} styles={styles} />
           <Benefit icon="eye" color={Colors.primary} text={t('premium.benefitReadReceipts')} styles={styles} />
           <Benefit icon="time" color={Colors.primary} text={t('premium.benefitLastSeen')} styles={styles} />
+          <Benefit icon="flash" color="#E0A800" text={t('premium.benefitBoost')} styles={styles} />
         </View>
 
         {/* Plans */}

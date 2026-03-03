@@ -97,7 +97,12 @@
     "hometownPlaceholder": "Adib: Bilbo",
     "hometownSearching": "Bilatzen...",
     "hometownNoResults": "Ez da hiririk aurkitu",
-    "hometownGpsError": "Ezin izan da zure hiria detektatu"
+    "hometownGpsError": "Ezin izan da zure hiria detektatu",
+    "boostTitle": "Profil Boosta",
+    "boostActive": "Boosta aktibo",
+    "boostActivate": "Boosta aktibatu",
+    "boostBuy": "Boosta erosi",
+    "pausedBanner": "Zure profila pausatuta dago — sakatu berreskuratzeko"
   },
   "orientation": {
     "lesbian": "Lesbiana",
@@ -353,7 +358,13 @@
     "version": "Bertsioa",
     "blockedUsers": "Erabiltzaile bloketuak",
     "signOut": "Saioa itxi",
-    "signOutConfirm": "Ziur zaude saioa itxi nahi duzula?"
+    "signOutConfirm": "Ziur zaude saioa itxi nahi duzula?",
+    "profileSection": "Profila",
+    "pauseProfile": "Profila pausatu",
+    "resumeProfile": "Zure profila pausatuta dago — sakatu hemen berrekiteko",
+    "pauseProfileDesc": "Ezkutatu zure profila pertsona berrientzat zure matchak galdu gabe",
+    "pauseConfirmTitle": "Zure profila pausatu?",
+    "pauseConfirmMessage": "Zure profila pertsona berrien aurrean ezkutatuko da. Zure matchak eta txatak berdin geratuko dira."
   },
   "changePassword": {
     "title": "Pasahitza aldatu",
@@ -382,6 +393,7 @@
     "benefitIceBreaker": "Egunean izotz-hausle 1",
     "benefitReadReceipts": "Irakurketa berrespenak txatetan",
     "benefitLastSeen": "Besteen azken konexioa ikusi",
+    "benefitBoost": "Asteko 1 boost — lehena agertu 30 minutuz",
     "expiredTitle": "Zure premiuma iraungitu da",
     "expiredMessage": "Jada ez duzu premium funtzioak eskura:",
     "renew": "Premium-a berritu",
@@ -412,6 +424,15 @@
     "redeem": "Trukatu",
     "codeSuccess": "Kodea trukatuta! Ongi etorri Premium-era!",
     "invalidCode": "Kode baliogabea. Egiaztatu eta saiatu berriro."
+  },
+  "boost": {
+    "title": "Profil Boosta",
+    "subtitle": "Agertu aurkikuntzan lehena 30 minutuz",
+    "x1": "1 Boost",
+    "x3": "3 Boost",
+    "activated": "Zure profila boostatuta dago!",
+    "errorNoBoosts": "Ez duzu boost erabilgarririk",
+    "activateSuccess": "Boosta aktibatu da!"
   },
   "streak": {
     "title": "Eguneroko raxa",

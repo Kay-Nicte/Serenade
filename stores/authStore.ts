@@ -40,6 +40,7 @@ export interface Profile {
   hogwarts_house: string | null;
   hometown: string | null;
   is_verified: boolean;
+  is_paused: boolean;
   verification_status: string;
   created_at: string;
   updated_at: string;

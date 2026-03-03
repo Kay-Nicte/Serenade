@@ -97,7 +97,12 @@
     "hometownPlaceholder": "Ej: Barcelona",
     "hometownSearching": "Buscando...",
     "hometownNoResults": "No se encontraron ciudades",
-    "hometownGpsError": "No se pudo detectar tu ciudad"
+    "hometownGpsError": "No se pudo detectar tu ciudad",
+    "boostTitle": "Boost de perfil",
+    "boostActive": "Boost activo",
+    "boostActivate": "Activar Boost",
+    "boostBuy": "Comprar Boost",
+    "pausedBanner": "Tu perfil está pausado — toca para reanudar"
   },
   "orientation": {
     "lesbian": "Lesbiana",
@@ -353,7 +358,13 @@
     "version": "Versión",
     "blockedUsers": "Usuarias bloqueadas",
     "signOut": "Cerrar sesión",
-    "signOutConfirm": "¿Estás segura de que quieres cerrar sesión?"
+    "signOutConfirm": "¿Estás segura de que quieres cerrar sesión?",
+    "profileSection": "Perfil",
+    "pauseProfile": "Pausar perfil",
+    "resumeProfile": "Tu perfil está pausado — toca aquí para reanudar",
+    "pauseProfileDesc": "Oculta tu perfil a personas nuevas sin perder tus matches",
+    "pauseConfirmTitle": "¿Pausar tu perfil?",
+    "pauseConfirmMessage": "Tu perfil quedará oculto para nuevas personas. Tus matches y chats permanecerán intactos."
   },
   "changePassword": {
     "title": "Cambiar contraseña",
@@ -382,6 +393,7 @@
     "benefitIceBreaker": "1 rompehielos al día",
     "benefitReadReceipts": "Confirmaciones de lectura en chats",
     "benefitLastSeen": "Ver la última conexión de las demás",
+    "benefitBoost": "1 boost semanal — aparece la primera durante 30 min",
     "expiredTitle": "Tu premium ha expirado",
     "expiredMessage": "Ya no tienes acceso a las funciones premium:",
     "renew": "Renovar Premium",
@@ -412,6 +424,15 @@
     "redeem": "Canjear",
     "codeSuccess": "¡Código canjeado! ¡Bienvenida a Premium!",
     "invalidCode": "Código no válido. Revísalo e inténtalo de nuevo."
+  },
+  "boost": {
+    "title": "Boost de perfil",
+    "subtitle": "Aparece primero en el descubrimiento durante 30 minutos",
+    "x1": "1 Boost",
+    "x3": "3 Boosts",
+    "activated": "¡Tu perfil está boosteado!",
+    "errorNoBoosts": "No tienes boosts disponibles",
+    "activateSuccess": "¡Boost activado!"
   },
   "streak": {
     "title": "Racha diaria",

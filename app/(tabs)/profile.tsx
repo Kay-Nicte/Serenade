@@ -47,6 +47,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { showToast } from '@/stores/toastStore';
 import { useStreak } from '@/hooks/useStreak';
 import { useDailyStatsStore } from '@/stores/dailyStatsStore';
+import { useBoostStore } from '@/stores/boostStore';
 import { supabase } from '@/lib/supabase';
 import { usePromptStore, type ProfilePrompt } from '@/stores/promptStore';
 
@@ -63,15 +64,19 @@ export default function ProfileScreen() {
   const { isTablet, contentMaxWidth, horizontalPadding } = useResponsive();
   useStreak(); // triggers fetch on mount
 
-  // Refresh profile on tab focus to pick up verification status changes
+  // Refresh profile and boost state on tab focus
   useFocusEffect(
     useCallback(() => {
       fetchProfile();
-    }, [fetchProfile])
+      fetchBoosts();
+    }, [fetchProfile, fetchBoosts])
   );
 
   const isPremium = profile?.is_premium ?? false;
   const premiumUntil = profile?.premium_until ?? null;
+  const isPaused = profile?.is_paused ?? false;
+  const { availableBoosts, boostedUntil, secondsRemaining, activateBoost, fetch: fetchBoosts } = useBoostStore();
+  const isBoostActive = boostedUntil !== null && boostedUntil > new Date();
   const currentStreak = useDailyStatsStore((s) => s.currentStreak);
   const availableSuperlikes = useDailyStatsStore((s) => s.availableSuperlikes);
   const availableIceBreakers = useDailyStatsStore((s) => s.availableIceBreakers);
@@ -336,6 +341,19 @@ export default function ProfileScreen() {
             </View>
           </View>
 
+          {/* Pause banner */}
+          {isPaused && (
+            <TouchableOpacity
+              style={styles.pauseBanner}
+              onPress={() => router.push('/settings')}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="pause-circle" size={20} color={Colors.warning} />
+              <Text style={styles.pauseBannerText}>{t('profile.pausedBanner')}</Text>
+              <Ionicons name="chevron-forward" size={16} color={Colors.warning} />
+            </TouchableOpacity>
+          )}
+
           <View style={styles.card}>
             {profile?.avatar_url ? (
               <Image source={{ uri: profile.avatar_url }} style={styles.avatar} />
@@ -563,6 +581,56 @@ export default function ProfileScreen() {
                 <Ionicons name="chevron-forward" size={20} color={Colors.primary} />
               )}
             </TouchableOpacity>
+          )}
+
+          {/* Boost Card */}
+          {(isPremium || availableBoosts > 0 || isBoostActive) && (
+            <View style={[styles.streakCard, styles.boostCard]}>
+              <View style={styles.streakHeader}>
+                <Ionicons name="flash" size={22} color="#E0A800" />
+                <Text style={styles.streakTitle}>{t('profile.boostTitle')}</Text>
+              </View>
+              {isBoostActive ? (
+                <View style={styles.boostActiveRow}>
+                  <Text style={styles.boostCountdown}>
+                    {Math.floor(secondsRemaining / 60)}:{String(secondsRemaining % 60).padStart(2, '0')}
+                  </Text>
+                  <Text style={styles.boostActiveLabel}>{t('profile.boostActive')}</Text>
+                </View>
+              ) : (
+                <View style={styles.boostActions}>
+                  {availableBoosts > 0 ? (
+                    <TouchableOpacity
+                      style={styles.boostButton}
+                      onPress={async () => {
+                        const result = await activateBoost();
+                        if (result.success) {
+                          showToast(t('boost.activated'), 'success');
+                        } else {
+                          showToast(t('boost.errorNoBoosts'), 'error');
+                        }
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons name="flash" size={18} color="#fff" />
+                      <Text style={styles.boostButtonText}>{t('profile.boostActivate')}</Text>
+                      <View style={styles.boostBadge}>
+                        <Text style={styles.boostBadgeText}>{availableBoosts}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.boostBuyButton}
+                      onPress={() => router.push('/buy-boost')}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons name="flash-outline" size={18} color="#E0A800" />
+                      <Text style={styles.boostBuyButtonText}>{t('profile.boostBuy')}</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
+            </View>
           )}
 
           {/* Streak Card */}
@@ -1351,6 +1419,88 @@ function makeStyles(c: ReturnType<typeof useColors>) {
       fontSize: 14,
       fontFamily: Fonts.body,
       color: c.textTertiary,
+    },
+    pauseBanner: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      backgroundColor: '#FFF8E1',
+      borderWidth: 1,
+      borderColor: '#FFE082',
+      borderRadius: 12,
+      paddingHorizontal: 14,
+      paddingVertical: 10,
+    },
+    pauseBannerText: {
+      flex: 1,
+      fontSize: 13,
+      fontFamily: Fonts.bodyMedium,
+      color: '#9A7800',
+    },
+    boostCard: {
+      borderWidth: 1,
+      borderColor: '#FFE082',
+    },
+    boostActiveRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 12,
+    },
+    boostCountdown: {
+      fontSize: 32,
+      fontFamily: Fonts.heading,
+      color: '#E0A800',
+    },
+    boostActiveLabel: {
+      fontSize: 14,
+      fontFamily: Fonts.bodyMedium,
+      color: c.textSecondary,
+    },
+    boostActions: {
+      flexDirection: 'row',
+    },
+    boostButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      backgroundColor: '#E0A800',
+      borderRadius: 24,
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+    },
+    boostButtonText: {
+      fontSize: 15,
+      fontFamily: Fonts.bodySemiBold,
+      color: '#fff',
+    },
+    boostBadge: {
+      backgroundColor: 'rgba(255,255,255,0.3)',
+      borderRadius: 10,
+      minWidth: 20,
+      height: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 4,
+    },
+    boostBadgeText: {
+      fontSize: 11,
+      fontFamily: Fonts.bodySemiBold,
+      color: '#fff',
+    },
+    boostBuyButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      borderWidth: 1,
+      borderColor: '#E0A800',
+      borderRadius: 24,
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+    },
+    boostBuyButtonText: {
+      fontSize: 15,
+      fontFamily: Fonts.bodySemiBold,
+      color: '#E0A800',
     },
     streakCard: {
       padding: 20,

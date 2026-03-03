@@ -97,7 +97,12 @@
     "hometownPlaceholder": "e.g. Barcelona",
     "hometownSearching": "Searching...",
     "hometownNoResults": "No cities found",
-    "hometownGpsError": "Could not detect your city"
+    "hometownGpsError": "Could not detect your city",
+    "boostTitle": "Profile Boost",
+    "boostActive": "Boost active",
+    "boostActivate": "Activate Boost",
+    "boostBuy": "Buy Boost",
+    "pausedBanner": "Your profile is paused — tap to resume"
   },
   "orientation": {
     "lesbian": "Lesbian",
@@ -353,7 +358,13 @@
     "version": "Version",
     "blockedUsers": "Blocked users",
     "signOut": "Sign out",
-    "signOutConfirm": "Are you sure you want to sign out?"
+    "signOutConfirm": "Are you sure you want to sign out?",
+    "profileSection": "Profile",
+    "pauseProfile": "Pause profile",
+    "resumeProfile": "Your profile is paused — tap here to resume",
+    "pauseProfileDesc": "Hide your profile from new people while keeping your matches",
+    "pauseConfirmTitle": "Pause your profile?",
+    "pauseConfirmMessage": "Your profile will be hidden from new people. Your matches and chats will remain intact."
   },
   "changePassword": {
     "title": "Change password",
@@ -382,6 +393,7 @@
     "benefitIceBreaker": "1 ice breaker per day",
     "benefitReadReceipts": "Read receipts in chats",
     "benefitLastSeen": "See when others were last online",
+    "benefitBoost": "1 weekly boost — appear first for 30 min",
     "expiredTitle": "Your premium has expired",
     "expiredMessage": "You no longer have access to premium features:",
     "renew": "Renew Premium",
@@ -412,6 +424,15 @@
     "redeem": "Redeem",
     "codeSuccess": "Code redeemed! Welcome to Premium!",
     "invalidCode": "Invalid code. Please check and try again."
+  },
+  "boost": {
+    "title": "Profile Boost",
+    "subtitle": "Appear first in discovery for 30 minutes",
+    "x1": "1 Boost",
+    "x3": "3 Boosts",
+    "activated": "Your profile is boosted!",
+    "errorNoBoosts": "No boosts available",
+    "activateSuccess": "Boost activated!"
   },
   "streak": {
     "title": "Daily Streak",
