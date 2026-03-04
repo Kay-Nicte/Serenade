@@ -161,11 +161,12 @@ export default function DiscoveryPreferencesScreen() {
         hogwarts_include_unspecified: hogwartsInclude,
         height_include_unspecified: heightInclude,
       });
-      await fetchCandidates();
       router.back();
+      fetchCandidates(); // non-blocking refresh
     } catch (err: any) {
-      console.error('Discovery save error:', err?.message ?? err);
-      showToast(t('common.error'), 'error');
+      const msg: string = err?.message ?? String(err);
+      console.error('Discovery save error:', msg);
+      showToast(msg, 'error');
     } finally {
       setSaving(false);
     }
