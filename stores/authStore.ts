@@ -40,6 +40,15 @@ export interface Profile {
   height_cm: number | null;
   hogwarts_house: string | null;
   hometown: string | null;
+  languages: string[] | null;
+  pronouns: string | null;
+  gender_identity: string | null;
+  relationship_type: string | null;
+  exercise: string | null;
+  education: string | null;
+  profession: string | null;
+  religion: string | null;
+  music_genres: string[] | null;
   is_verified: boolean;
   is_paused: boolean;
   verification_status: string;
@@ -90,6 +99,8 @@ function normalizeProfile(data: any): Profile {
     looking_for: normalizeArray(data.looking_for),
     interests: normalizeArray(data.interests),
     pets: normalizeArray(data.pets),
+    languages: normalizeArray(data.languages),
+    music_genres: normalizeArray(data.music_genres),
   };
 }
 

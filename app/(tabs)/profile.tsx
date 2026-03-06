@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { Fonts } from '@/constants/fonts';
-import { Config, ORIENTATIONS, LOOKING_FOR_OPTIONS, INTERESTS, CHILDREN_OPTIONS, ZODIAC_SIGNS, PET_OPTIONS, SMOKING_OPTIONS, DRINKING_OPTIONS, HOGWARTS_HOUSES } from '@/constants/config';
+import { Config, ORIENTATIONS, LOOKING_FOR_OPTIONS, INTERESTS, CHILDREN_OPTIONS, ZODIAC_SIGNS, PET_OPTIONS, SMOKING_OPTIONS, DRINKING_OPTIONS, HOGWARTS_HOUSES, LANGUAGES, PRONOUNS, GENDER_IDENTITY, RELATIONSHIP_TYPE, EXERCISE_OPTIONS, EDUCATION_OPTIONS, RELIGION_OPTIONS, MUSIC_GENRES } from '@/constants/config';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Tag } from '@/components/ui/Tag';
@@ -120,6 +120,15 @@ export default function ProfileScreen() {
   const [heightCm, setHeightCm] = useState<string>('');
   const [hogwartsHouse, setHogwartsHouse] = useState<string | null>(null);
   const [hometown, setHometown] = useState('');
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [pronouns, setPronouns] = useState<string | null>(null);
+  const [genderIdentity, setGenderIdentity] = useState<string | null>(null);
+  const [relationshipType, setRelationshipType] = useState<string | null>(null);
+  const [exercise, setExercise] = useState<string | null>(null);
+  const [education, setEducation] = useState<string | null>(null);
+  const [profession, setProfession] = useState('');
+  const [religion, setReligion] = useState<string | null>(null);
+  const [musicGenres, setMusicGenres] = useState<string[]>([]);
   const [citySuggestions, setCitySuggestions] = useState<CitySuggestion[]>([]);
   const [citySearching, setCitySearching] = useState(false);
   const [gpsLoading, setGpsLoading] = useState(false);
@@ -175,6 +184,15 @@ export default function ProfileScreen() {
       setHeightCm(profile.height_cm ? String(profile.height_cm) : '');
       setHogwartsHouse(profile.hogwarts_house ?? null);
       setHometown(profile.hometown ?? '');
+      setLanguages(profile.languages ?? []);
+      setPronouns(profile.pronouns ?? null);
+      setGenderIdentity(profile.gender_identity ?? null);
+      setRelationshipType(profile.relationship_type ?? null);
+      setExercise(profile.exercise ?? null);
+      setEducation(profile.education ?? null);
+      setProfession(profile.profession ?? '');
+      setReligion(profile.religion ?? null);
+      setMusicGenres(profile.music_genres ?? []);
       if (profile.birth_date) {
         const [y, m, d] = profile.birth_date.split('-');
         setYear(y);
@@ -220,6 +238,12 @@ export default function ProfileScreen() {
   };
   const togglePet = (p: string) => {
     setPets((prev) => prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]);
+  };
+  const toggleLanguage = (l: string) => {
+    setLanguages((prev) => prev.includes(l) ? prev.filter((x) => x !== l) : [...prev, l]);
+  };
+  const toggleMusicGenre = (g: string) => {
+    setMusicGenres((prev) => prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g]);
   };
 
   // Hometown autocomplete + GPS handlers
@@ -303,6 +327,15 @@ export default function ProfileScreen() {
         height_cm: heightCm ? parseInt(heightCm, 10) || null : null,
         hogwarts_house: hogwartsHouse,
         hometown: hometown.trim() || null,
+        languages: languages.length > 0 ? languages : null,
+        pronouns: pronouns,
+        gender_identity: genderIdentity,
+        relationship_type: relationshipType,
+        exercise: exercise,
+        education: education,
+        profession: profession.trim() || null,
+        religion: religion,
+        music_genres: musicGenres.length > 0 ? musicGenres : null,
       } as any);
 
       // Try to activate premium trial if user hasn't had it yet
@@ -426,6 +459,7 @@ export default function ProfileScreen() {
             )}
 
             <View style={styles.info}>
+              {/* Basics */}
               {profile?.hometown && (
                 <View style={styles.infoRow}>
                   <Ionicons name="location-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
@@ -449,6 +483,22 @@ export default function ProfileScreen() {
                   </View>
                 );
               })()}
+              {/* Identity */}
+              {profile?.pronouns && (
+                <View style={styles.infoRow}>
+                  <Ionicons name="chatbox-ellipses-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
+                  <Text style={styles.infoLabel}>{t('profile.pronouns.title')}</Text>
+                  <Text style={styles.infoValue}>{t(`profile.pronouns.${profile.pronouns}`)}</Text>
+                </View>
+              )}
+              {profile?.gender_identity && (
+                <View style={styles.infoRow}>
+                  <Ionicons name="transgender-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
+                  <Text style={styles.infoLabel}>{t('profile.genderIdentity.title')}</Text>
+                  <Text style={styles.infoValue}>{t(`profile.genderIdentity.${profile.gender_identity}`)}</Text>
+                </View>
+              )}
+              {/* Dating */}
               {ensureArray(profile?.orientation).length > 0 && (
                 <View style={styles.infoRow}>
                   <Ionicons name="heart-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
@@ -467,6 +517,38 @@ export default function ProfileScreen() {
                   </Text>
                 </View>
               )}
+              {profile?.relationship_type && (
+                <View style={styles.infoRow}>
+                  <Ionicons name="heart-half-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
+                  <Text style={styles.infoLabel}>{t('profile.relationshipType.title')}</Text>
+                  <Text style={styles.infoValue}>{t(`profile.relationshipType.${profile.relationship_type}`)}</Text>
+                </View>
+              )}
+              {/* Life */}
+              {ensureArray(profile?.languages).length > 0 && (
+                <View style={styles.infoRow}>
+                  <Ionicons name="language-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
+                  <Text style={styles.infoLabel}>{t('profile.languages.title')}</Text>
+                  <Text style={styles.infoValue}>
+                    {ensureArray(profile?.languages).map((l) => t(`profile.languages.${l}`)).join(', ')}
+                  </Text>
+                </View>
+              )}
+              {profile?.profession && (
+                <View style={styles.infoRow}>
+                  <Ionicons name="briefcase-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
+                  <Text style={styles.infoLabel}>{t('profile.profession.title')}</Text>
+                  <Text style={styles.infoValue}>{profile.profession}</Text>
+                </View>
+              )}
+              {profile?.education && (
+                <View style={styles.infoRow}>
+                  <Ionicons name="school-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
+                  <Text style={styles.infoLabel}>{t('profile.education.title')}</Text>
+                  <Text style={styles.infoValue}>{t(`profile.education.${profile.education}`)}</Text>
+                </View>
+              )}
+              {/* Hobbies */}
               {ensureArray(profile?.interests).length > 0 && (
                 <View style={styles.infoRow}>
                   <Ionicons name="sparkles-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
@@ -476,18 +558,21 @@ export default function ProfileScreen() {
                   </Text>
                 </View>
               )}
-              {profile?.zodiac && (
+              {ensureArray(profile?.music_genres).length > 0 && (
                 <View style={styles.infoRow}>
-                  <Ionicons name="star-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
-                  <Text style={styles.infoLabel}>{t('profile.zodiac')}</Text>
-                  <Text style={styles.infoValue}>{t(`zodiac.${profile.zodiac}`)}</Text>
+                  <Ionicons name="musical-notes-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
+                  <Text style={styles.infoLabel}>{t('profile.musicGenres.title')}</Text>
+                  <Text style={styles.infoValue}>
+                    {ensureArray(profile?.music_genres).map((g) => t(`profile.musicGenres.${g}`)).join(', ')}
+                  </Text>
                 </View>
               )}
-              {profile?.zodiac_ascendant && (
+              {/* Physical */}
+              {profile?.exercise && (
                 <View style={styles.infoRow}>
-                  <Ionicons name="moon-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
-                  <Text style={styles.infoLabel}>{t('profile.zodiacAscendant')}</Text>
-                  <Text style={styles.infoValue}>{t(`zodiac.${profile.zodiac_ascendant}`)}</Text>
+                  <Ionicons name="barbell-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
+                  <Text style={styles.infoLabel}>{t('profile.exercise.title')}</Text>
+                  <Text style={styles.infoValue}>{t(`profile.exercise.${profile.exercise}`)}</Text>
                 </View>
               )}
               {profile?.height_cm && (
@@ -497,6 +582,7 @@ export default function ProfileScreen() {
                   <Text style={styles.infoValue}>{t('profile.heightCm', { cm: profile.height_cm })}</Text>
                 </View>
               )}
+              {/* Lifestyle */}
               {profile?.children && (
                 <View style={styles.infoRow}>
                   <Ionicons name="people-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
@@ -525,6 +611,28 @@ export default function ProfileScreen() {
                   <Ionicons name="wine-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
                   <Text style={styles.infoLabel}>{t('profile.drinking')}</Text>
                   <Text style={styles.infoValue}>{t(`drinking.${profile.drinking}`)}</Text>
+                </View>
+              )}
+              {/* Fun / Astrology */}
+              {profile?.zodiac && (
+                <View style={styles.infoRow}>
+                  <Ionicons name="star-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
+                  <Text style={styles.infoLabel}>{t('profile.zodiac')}</Text>
+                  <Text style={styles.infoValue}>{t(`zodiac.${profile.zodiac}`)}</Text>
+                </View>
+              )}
+              {profile?.zodiac_ascendant && (
+                <View style={styles.infoRow}>
+                  <Ionicons name="moon-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
+                  <Text style={styles.infoLabel}>{t('profile.zodiacAscendant')}</Text>
+                  <Text style={styles.infoValue}>{t(`zodiac.${profile.zodiac_ascendant}`)}</Text>
+                </View>
+              )}
+              {profile?.religion && (
+                <View style={styles.infoRow}>
+                  <Ionicons name="leaf-outline" size={16} color={Colors.primaryDark} style={styles.infoIcon} />
+                  <Text style={styles.infoLabel}>{t('profile.religion.title')}</Text>
+                  <Text style={styles.infoValue}>{t(`profile.religion.${profile.religion}`)}</Text>
                 </View>
               )}
               {profile?.hogwarts_house && (
@@ -894,17 +1002,34 @@ export default function ProfileScreen() {
             maxLength={Config.maxBioLength}
           />
 
+          {/* --- Identity --- */}
+          {/* Pronouns */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>{t('profile.pronouns.title')}</Text>
+            <View style={styles.tags}>
+              {PRONOUNS.map((p) => (
+                <Tag key={p} label={t(`profile.pronouns.${p}`)} selected={pronouns === p} onPress={() => toggleSingleSelect(pronouns, p, setPronouns)} />
+              ))}
+            </View>
+          </View>
+
+          {/* Gender Identity */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>{t('profile.genderIdentity.title')}</Text>
+            <View style={styles.tags}>
+              {GENDER_IDENTITY.map((g) => (
+                <Tag key={g} label={t(`profile.genderIdentity.${g}`)} selected={genderIdentity === g} onPress={() => toggleSingleSelect(genderIdentity, g, setGenderIdentity)} />
+              ))}
+            </View>
+          </View>
+
+          {/* --- Dating --- */}
           {/* Orientation */}
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>{t('profile.orientation')}</Text>
             <View style={styles.tags}>
               {ORIENTATIONS.map((o) => (
-                <Tag
-                  key={o}
-                  label={t(`orientation.${o}`)}
-                  selected={orientations.includes(o)}
-                  onPress={() => toggleOrientation(o)}
-                />
+                <Tag key={o} label={t(`orientation.${o}`)} selected={orientations.includes(o)} onPress={() => toggleOrientation(o)} />
               ))}
             </View>
           </View>
@@ -914,16 +1039,52 @@ export default function ProfileScreen() {
             <Text style={styles.sectionLabel}>{t('profile.lookingFor')}</Text>
             <View style={styles.tags}>
               {LOOKING_FOR.map((lf) => (
-                <Tag
-                  key={lf}
-                  label={t(`lookingFor.${lf}`)}
-                  selected={lookingFor.includes(lf)}
-                  onPress={() => toggleLookingFor(lf)}
-                />
+                <Tag key={lf} label={t(`lookingFor.${lf}`)} selected={lookingFor.includes(lf)} onPress={() => toggleLookingFor(lf)} />
               ))}
             </View>
           </View>
 
+          {/* Relationship Type */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>{t('profile.relationshipType.title')}</Text>
+            <View style={styles.tags}>
+              {RELATIONSHIP_TYPE.map((r) => (
+                <Tag key={r} label={t(`profile.relationshipType.${r}`)} selected={relationshipType === r} onPress={() => toggleSingleSelect(relationshipType, r, setRelationshipType)} />
+              ))}
+            </View>
+          </View>
+
+          {/* --- Life --- */}
+          {/* Languages */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>{t('profile.languages.title')}</Text>
+            <View style={styles.tags}>
+              {LANGUAGES.map((l) => (
+                <Tag key={l} label={t(`profile.languages.${l}`)} selected={languages.includes(l)} onPress={() => toggleLanguage(l)} />
+              ))}
+            </View>
+          </View>
+
+          {/* Profession */}
+          <Input
+            label={t('profile.profession.title')}
+            value={profession}
+            onChangeText={setProfession}
+            placeholder={t('profile.profession.title')}
+            maxLength={100}
+          />
+
+          {/* Education */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>{t('profile.education.title')}</Text>
+            <View style={styles.tags}>
+              {EDUCATION_OPTIONS.map((e) => (
+                <Tag key={e} label={t(`profile.education.${e}`)} selected={education === e} onPress={() => toggleSingleSelect(education, e, setEducation)} />
+              ))}
+            </View>
+          </View>
+
+          {/* --- Hobbies --- */}
           {/* Interests */}
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>{t('profile.interests')}</Text>
@@ -934,22 +1095,23 @@ export default function ProfileScreen() {
             </View>
           </View>
 
-          {/* Zodiac */}
+          {/* Music Genres */}
           <View style={styles.section}>
-            <Text style={styles.sectionLabel}>{t('profile.zodiac')}</Text>
+            <Text style={styles.sectionLabel}>{t('profile.musicGenres.title')}</Text>
             <View style={styles.tags}>
-              {ZODIAC_SIGNS.map((z) => (
-                <Tag key={z} label={t(`zodiac.${z}`)} selected={zodiac === z} onPress={() => toggleSingleSelect(zodiac, z, setZodiac)} />
+              {MUSIC_GENRES.map((g) => (
+                <Tag key={g} label={t(`profile.musicGenres.${g}`)} selected={musicGenres.includes(g)} onPress={() => toggleMusicGenre(g)} />
               ))}
             </View>
           </View>
 
-          {/* Zodiac Ascendant */}
+          {/* --- Physical --- */}
+          {/* Exercise */}
           <View style={styles.section}>
-            <Text style={styles.sectionLabel}>{t('profile.zodiacAscendant')}</Text>
+            <Text style={styles.sectionLabel}>{t('profile.exercise.title')}</Text>
             <View style={styles.tags}>
-              {ZODIAC_SIGNS.map((z) => (
-                <Tag key={z} label={t(`zodiac.${z}`)} selected={zodiacAscendant === z} onPress={() => toggleSingleSelect(zodiacAscendant, z, setZodiacAscendant)} />
+              {EXERCISE_OPTIONS.map((e) => (
+                <Tag key={e} label={t(`profile.exercise.${e}`)} selected={exercise === e} onPress={() => toggleSingleSelect(exercise, e, setExercise)} />
               ))}
             </View>
           </View>
@@ -973,6 +1135,7 @@ export default function ProfileScreen() {
             </View>
           </View>
 
+          {/* --- Lifestyle --- */}
           {/* Children */}
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>{t('profile.children')}</Text>
@@ -1009,6 +1172,37 @@ export default function ProfileScreen() {
             <View style={styles.tags}>
               {DRINKING_OPTIONS.map((d) => (
                 <Tag key={d} label={t(`drinking.${d}`)} selected={drinkingVal === d} onPress={() => toggleSingleSelect(drinkingVal, d, setDrinkingVal)} />
+              ))}
+            </View>
+          </View>
+
+          {/* --- Fun / Astrology --- */}
+          {/* Zodiac */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>{t('profile.zodiac')}</Text>
+            <View style={styles.tags}>
+              {ZODIAC_SIGNS.map((z) => (
+                <Tag key={z} label={t(`zodiac.${z}`)} selected={zodiac === z} onPress={() => toggleSingleSelect(zodiac, z, setZodiac)} />
+              ))}
+            </View>
+          </View>
+
+          {/* Zodiac Ascendant */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>{t('profile.zodiacAscendant')}</Text>
+            <View style={styles.tags}>
+              {ZODIAC_SIGNS.map((z) => (
+                <Tag key={z} label={t(`zodiac.${z}`)} selected={zodiacAscendant === z} onPress={() => toggleSingleSelect(zodiacAscendant, z, setZodiacAscendant)} />
+              ))}
+            </View>
+          </View>
+
+          {/* Religion */}
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>{t('profile.religion.title')}</Text>
+            <View style={styles.tags}>
+              {RELIGION_OPTIONS.map((r) => (
+                <Tag key={r} label={t(`profile.religion.${r}`)} selected={religion === r} onPress={() => toggleSingleSelect(religion, r, setReligion)} />
               ))}
             </View>
           </View>

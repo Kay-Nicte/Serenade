@@ -103,7 +103,97 @@
     "boostActive": "Boost active",
     "boostActivate": "Activate Boost",
     "boostBuy": "Buy Boost",
-    "pausedBanner": "Your profile is paused — tap to resume"
+    "pausedBanner": "Your profile is paused — tap to resume",
+    "languages": {
+      "title": "Languages",
+      "spanish": "Spanish",
+      "english": "English",
+      "catalan": "Catalan",
+      "basque": "Basque",
+      "galician": "Galician",
+      "french": "French",
+      "german": "German",
+      "portuguese": "Portuguese",
+      "italian": "Italian",
+      "arabic": "Arabic",
+      "chinese": "Chinese",
+      "other": "Other"
+    },
+    "pronouns": {
+      "title": "Pronouns",
+      "she_her": "She/Her",
+      "he_him": "He/Him",
+      "they_them": "They/Them",
+      "she_they": "She/They",
+      "other": "Other"
+    },
+    "relationshipType": {
+      "title": "Relationship type",
+      "monogamy": "Monogamy",
+      "polyamory": "Polyamory",
+      "open_relationship": "Open relationship",
+      "not_sure": "Not sure"
+    },
+    "exercise": {
+      "title": "Exercise",
+      "daily": "Daily",
+      "few_times_week": "A few times a week",
+      "weekly": "Weekly",
+      "rarely": "Rarely",
+      "never": "Never"
+    },
+    "education": {
+      "title": "Education",
+      "high_school": "High school",
+      "vocational": "Vocational",
+      "bachelors": "Bachelor's",
+      "masters": "Master's",
+      "phd": "PhD",
+      "other": "Other"
+    },
+    "profession": {
+      "title": "Profession"
+    },
+    "religion": {
+      "title": "Religion",
+      "christian": "Christian",
+      "muslim": "Muslim",
+      "jewish": "Jewish",
+      "hindu": "Hindu",
+      "buddhist": "Buddhist",
+      "atheist": "Atheist",
+      "agnostic": "Agnostic",
+      "spiritual": "Spiritual",
+      "other": "Other",
+      "prefer_not_say": "Prefer not to say"
+    },
+    "musicGenres": {
+      "title": "Music genres",
+      "pop": "Pop",
+      "rock": "Rock",
+      "indie": "Indie",
+      "electronic": "Electronic",
+      "hip_hop": "Hip Hop",
+      "reggaeton": "Reggaeton",
+      "jazz": "Jazz",
+      "classical": "Classical",
+      "rnb": "R&B",
+      "folk": "Folk",
+      "latin": "Latin",
+      "metal": "Metal",
+      "blues": "Blues",
+      "kpop": "K-Pop",
+      "other": "Other"
+    },
+    "genderIdentity": {
+      "title": "Gender identity",
+      "cis_woman": "Cis woman",
+      "trans_woman": "Trans woman",
+      "non_binary": "Non-binary",
+      "genderfluid": "Genderfluid",
+      "prefer_not_say": "Prefer not to say",
+      "other": "Other"
+    }
   },
   "orientation": {
     "lesbian": "Lesbian",

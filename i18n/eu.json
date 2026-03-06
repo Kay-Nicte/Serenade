@@ -103,7 +103,97 @@
     "boostActive": "Boosta aktibo",
     "boostActivate": "Boosta aktibatu",
     "boostBuy": "Boosta erosi",
-    "pausedBanner": "Zure profila pausatuta dago — sakatu berreskuratzeko"
+    "pausedBanner": "Zure profila pausatuta dago — sakatu berreskuratzeko",
+    "languages": {
+      "title": "Hizkuntzak",
+      "spanish": "Gaztelania",
+      "english": "Ingelesa",
+      "catalan": "Katalana",
+      "basque": "Euskara",
+      "galician": "Galiziera",
+      "french": "Frantsesa",
+      "german": "Alemana",
+      "portuguese": "Portugesa",
+      "italian": "Italiera",
+      "arabic": "Arabiera",
+      "chinese": "Txinera",
+      "other": "Bestea"
+    },
+    "pronouns": {
+      "title": "Izenordainak",
+      "she_her": "Bera (em.)",
+      "he_him": "Bera (mask.)",
+      "they_them": "Bera (neutr.)",
+      "she_they": "Bera (em./neutr.)",
+      "other": "Bestea"
+    },
+    "relationshipType": {
+      "title": "Harreman mota",
+      "monogamy": "Monogamia",
+      "polyamory": "Poliamoria",
+      "open_relationship": "Harreman irekia",
+      "not_sure": "Ez nago ziur"
+    },
+    "exercise": {
+      "title": "Ariketa",
+      "daily": "Egunero",
+      "few_times_week": "Astean hainbat aldiz",
+      "weekly": "Astero",
+      "rarely": "Gutxitan",
+      "never": "Inoiz ez"
+    },
+    "education": {
+      "title": "Hezkuntza",
+      "high_school": "Batxilergoa",
+      "vocational": "Lanbide Heziketa",
+      "bachelors": "Gradua",
+      "masters": "Masterra",
+      "phd": "Doktoretza",
+      "other": "Bestea"
+    },
+    "profession": {
+      "title": "Lanbidea"
+    },
+    "religion": {
+      "title": "Erlijioa",
+      "christian": "Kristaua",
+      "muslim": "Musulmana",
+      "jewish": "Judua",
+      "hindu": "Hindua",
+      "buddhist": "Budista",
+      "atheist": "Ateoa",
+      "agnostic": "Agnostikoa",
+      "spiritual": "Espirituala",
+      "other": "Bestea",
+      "prefer_not_say": "Nahiago dut ez esan"
+    },
+    "musicGenres": {
+      "title": "Musika generoak",
+      "pop": "Pop",
+      "rock": "Rock",
+      "indie": "Indie",
+      "electronic": "Elektronikoa",
+      "hip_hop": "Hip Hop",
+      "reggaeton": "Reggaeton",
+      "jazz": "Jazz",
+      "classical": "Klasikoa",
+      "rnb": "R&B",
+      "folk": "Folk",
+      "latin": "Latina",
+      "metal": "Metal",
+      "blues": "Blues",
+      "kpop": "K-Pop",
+      "other": "Bestea"
+    },
+    "genderIdentity": {
+      "title": "Genero identitatea",
+      "cis_woman": "Emakume cis",
+      "trans_woman": "Emakume trans",
+      "non_binary": "Ez-binarioa",
+      "genderfluid": "Genero jariakorra",
+      "prefer_not_say": "Nahiago dut ez esan",
+      "other": "Bestea"
+    }
   },
   "orientation": {
     "lesbian": "Lesbiana",

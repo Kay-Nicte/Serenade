@@ -39,6 +39,15 @@ interface ProfileData {
   height_cm: number | null;
   hogwarts_house: string | null;
   hometown: string | null;
+  languages: string[] | null;
+  pronouns: string | null;
+  gender_identity: string | null;
+  relationship_type: string | null;
+  exercise: string | null;
+  education: string | null;
+  profession: string | null;
+  religion: string | null;
+  music_genres: string[] | null;
 }
 
 function ensureArray(val: unknown): string[] {
@@ -92,7 +101,7 @@ export default function MatchProfileScreen() {
       try {
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
-          .select('id, name, birth_date, bio, orientation, looking_for, avatar_url, interests, children, zodiac, zodiac_ascendant, pets, smoking, drinking, height_cm, hogwarts_house, hometown')
+          .select('id, name, birth_date, bio, orientation, looking_for, avatar_url, interests, children, zodiac, zodiac_ascendant, pets, smoking, drinking, height_cm, hogwarts_house, hometown, languages, pronouns, gender_identity, relationship_type, exercise, education, profession, religion, music_genres')
           .eq('id', userId)
           .single();
 
@@ -204,6 +213,59 @@ export default function MatchProfileScreen() {
             ))}
           </View>
 
+          {/* Identity */}
+          {(profile.pronouns || profile.gender_identity) && (
+            <View style={styles.section}>
+              {profile.pronouns && (
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>{t('profile.pronouns.title')}</Text>
+                  <Text style={styles.detailValue}>{t(`profile.pronouns.${profile.pronouns}`)}</Text>
+                </View>
+              )}
+              {profile.gender_identity && (
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>{t('profile.genderIdentity.title')}</Text>
+                  <Text style={styles.detailValue}>{t(`profile.genderIdentity.${profile.gender_identity}`)}</Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {/* Dating */}
+          {profile.relationship_type && (
+            <View style={styles.section}>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>{t('profile.relationshipType.title')}</Text>
+                <Text style={styles.detailValue}>{t(`profile.relationshipType.${profile.relationship_type}`)}</Text>
+              </View>
+            </View>
+          )}
+
+          {/* Life */}
+          {(ensureArray(profile.languages).length > 0 || profile.profession || profile.education) && (
+            <View style={styles.section}>
+              {ensureArray(profile.languages).length > 0 && (
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>{t('profile.languages.title')}</Text>
+                  <Text style={styles.detailValue}>{ensureArray(profile.languages).map((l) => t(`profile.languages.${l}`)).join(', ')}</Text>
+                </View>
+              )}
+              {profile.profession && (
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>{t('profile.profession.title')}</Text>
+                  <Text style={styles.detailValue}>{profile.profession}</Text>
+                </View>
+              )}
+              {profile.education && (
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>{t('profile.education.title')}</Text>
+                  <Text style={styles.detailValue}>{t(`profile.education.${profile.education}`)}</Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {/* Hobbies */}
           {ensureArray(profile.interests).length > 0 && (
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>{t('profile.interests')}</Text>
@@ -217,18 +279,26 @@ export default function MatchProfileScreen() {
             </View>
           )}
 
-          {(profile.zodiac || profile.height_cm) && (
+          {ensureArray(profile.music_genres).length > 0 && (
             <View style={styles.section}>
-              {profile.zodiac && (
+              <Text style={styles.sectionLabel}>{t('profile.musicGenres.title')}</Text>
+              <View style={styles.tags}>
+                {ensureArray(profile.music_genres).map((g, i) => (
+                  <View key={`mg-${g}-${i}`} style={styles.interestTag}>
+                    <Text style={styles.interestTagText}>{t(`profile.musicGenres.${g}`)}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
+
+          {/* Physical */}
+          {(profile.exercise || profile.height_cm) && (
+            <View style={styles.section}>
+              {profile.exercise && (
                 <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>{t('profile.zodiac')}</Text>
-                  <Text style={styles.detailValue}>{t(`zodiac.${profile.zodiac}`)}</Text>
-                </View>
-              )}
-              {profile.zodiac_ascendant && (
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>{t('profile.zodiacAscendant')}</Text>
-                  <Text style={styles.detailValue}>{t(`zodiac.${profile.zodiac_ascendant}`)}</Text>
+                  <Text style={styles.detailLabel}>{t('profile.exercise.title')}</Text>
+                  <Text style={styles.detailValue}>{t(`profile.exercise.${profile.exercise}`)}</Text>
                 </View>
               )}
               {profile.height_cm && (
@@ -240,6 +310,7 @@ export default function MatchProfileScreen() {
             </View>
           )}
 
+          {/* Lifestyle */}
           {(profile.children || profile.smoking || profile.drinking) && (
             <View style={styles.section}>
               {profile.children && (
@@ -268,6 +339,33 @@ export default function MatchProfileScreen() {
                   <Text style={styles.detailValue}>{t(`drinking.${profile.drinking}`)}</Text>
                 </View>
               )}
+            </View>
+          )}
+
+          {/* Fun / Astrology */}
+          {(profile.zodiac || profile.zodiac_ascendant) && (
+            <View style={styles.section}>
+              {profile.zodiac && (
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>{t('profile.zodiac')}</Text>
+                  <Text style={styles.detailValue}>{t(`zodiac.${profile.zodiac}`)}</Text>
+                </View>
+              )}
+              {profile.zodiac_ascendant && (
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>{t('profile.zodiacAscendant')}</Text>
+                  <Text style={styles.detailValue}>{t(`zodiac.${profile.zodiac_ascendant}`)}</Text>
+                </View>
+              )}
+            </View>
+          )}
+
+          {profile.religion && (
+            <View style={styles.section}>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>{t('profile.religion.title')}</Text>
+                <Text style={styles.detailValue}>{t(`profile.religion.${profile.religion}`)}</Text>
+              </View>
             </View>
           )}
 
