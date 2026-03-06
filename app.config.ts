@@ -97,6 +97,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     typedRoutes: true,
     reactCompiler: true,
   },
+  updates: {
+    url: 'https://u.expo.dev/98901d6c-f25e-401c-bbc2-bda2120a90a8',
+  },
+  runtimeVersion: {
+    policy: 'appVersion',
+  },
   extra: {
     supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
