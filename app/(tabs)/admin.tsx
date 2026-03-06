@@ -18,6 +18,7 @@ import { supabase } from '@/lib/supabase';
 import { ActionSheet, type ActionSheetOption } from '@/components/ActionSheet';
 import { Toast, useToast } from '@/components/Toast';
 import { showConfirm } from '@/components/ConfirmDialog';
+import { useAuthStore } from '@/stores/authStore';
 
 type ReportStatus = 'pending' | 'reviewed' | 'resolved' | 'dismissed';
 
@@ -41,6 +42,7 @@ export default function AdminScreen() {
   const { t } = useTranslation();
   const Colors = useColors();
   const styles = makeStyles(Colors);
+  const isAdmin = useAuthStore((s) => s.profile?.is_admin === true);
 
   const STATUS_COLORS: Record<ReportStatus, string> = {
     pending: Colors.warning,
@@ -315,19 +317,31 @@ export default function AdminScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.adminHeader}>
         <Text style={styles.title}>{t('admin.title')}</Text>
-        <TouchableOpacity
-          style={styles.verificationsLink}
-          onPress={() => router.push('/admin-verification')}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="shield-checkmark-outline" size={18} color={Colors.textOnPrimary} />
-          <Text style={styles.verificationsLinkText}>{t('admin.verifications')}</Text>
-          {pendingVerifications > 0 && (
-            <View style={styles.verificationsCountBadge}>
-              <Text style={styles.verificationsCountText}>{pendingVerifications}</Text>
-            </View>
+        <View style={styles.headerButtons}>
+          {isAdmin && (
+            <TouchableOpacity
+              style={[styles.verificationsLink, { backgroundColor: Colors.secondary }]}
+              onPress={() => router.push('/manage-moderators')}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="people-outline" size={18} color={Colors.textOnPrimary} />
+              <Text style={styles.verificationsLinkText}>{t('admin.moderators')}</Text>
+            </TouchableOpacity>
           )}
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.verificationsLink}
+            onPress={() => router.push('/admin-verification')}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="shield-checkmark-outline" size={18} color={Colors.textOnPrimary} />
+            <Text style={styles.verificationsLinkText}>{t('admin.verifications')}</Text>
+            {pendingVerifications > 0 && (
+              <View style={styles.verificationsCountBadge}>
+                <Text style={styles.verificationsCountText}>{pendingVerifications}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Filter tabs */}
@@ -397,6 +411,10 @@ function makeStyles(c: ReturnType<typeof useColors>) {
       paddingHorizontal: 24,
       paddingTop: 16,
       paddingBottom: 8,
+    },
+    headerButtons: {
+      flexDirection: 'row',
+      gap: 8,
     },
     title: {
       fontSize: 28,

@@ -207,6 +207,7 @@ export default function RootLayout() {
             <Stack.Screen name="match-profile" options={{ presentation: 'modal' }} />
             <Stack.Screen name="verify-identity" options={{ presentation: 'modal' }} />
             <Stack.Screen name="admin-verification" />
+            <Stack.Screen name="manage-moderators" />
             <Stack.Screen name="premium" options={{ presentation: 'modal' }} />
             <Stack.Screen name="buy-boost" options={{ presentation: 'modal' }} />
           </Stack>

@@ -26,6 +26,7 @@ export interface Profile {
   avatar_url: string | null;
   is_profile_complete: boolean;
   is_admin: boolean;
+  is_moderator: boolean;
   is_premium: boolean;
   is_trial: boolean;
   premium_until: string | null;

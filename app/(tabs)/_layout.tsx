@@ -10,11 +10,11 @@ import { useIceBreakerStore } from '@/stores/iceBreakerStore';
 import { PremiumExpiryModal } from '@/components/PremiumExpiryModal';
 import { supabase } from '@/lib/supabase';
 
-function useAdminPendingCount(isAdmin: boolean) {
+function useAdminPendingCount(isStaff: boolean) {
   const [count, setCount] = useState(0);
 
   const fetchCounts = useCallback(async () => {
-    if (!isAdmin) {
+    if (!isStaff) {
       setCount(0);
       return;
     }
@@ -30,7 +30,7 @@ function useAdminPendingCount(isAdmin: boolean) {
     } catch {
       // Non-critical
     }
-  }, [isAdmin]);
+  }, [isStaff]);
 
   // Refresh on tab focus
   useFocusEffect(
@@ -40,10 +40,10 @@ function useAdminPendingCount(isAdmin: boolean) {
   );
 
   useEffect(() => {
-    if (!isAdmin) return;
+    if (!isStaff) return;
     const interval = setInterval(fetchCounts, 60_000);
     return () => clearInterval(interval);
-  }, [isAdmin, fetchCounts]);
+  }, [isStaff, fetchCounts]);
 
   return count;
 }
@@ -53,8 +53,10 @@ export default function TabLayout() {
   const Colors = useColors();
   const profile = useAuthStore((s) => s.profile);
   const isAdmin = profile?.is_admin === true;
+  const isModerator = profile?.is_moderator === true;
+  const isStaff = isAdmin || isModerator;
   const pendingCount = useIceBreakerStore((s) => s.pendingIceBreakers.length);
-  const adminPendingCount = useAdminPendingCount(isAdmin);
+  const adminPendingCount = useAdminPendingCount(isStaff);
   const tabStyles = makeStyles(Colors);
 
   return (
@@ -124,7 +126,7 @@ export default function TabLayout() {
         name="admin"
         options={{
           title: t('tabs.admin'),
-          href: isAdmin ? '/(tabs)/admin' : null,
+          href: isStaff ? '/(tabs)/admin' : null,
           tabBarIcon: ({ color, size }) => (
             <View>
               <Ionicons name="shield-outline" size={size} color={color} />
