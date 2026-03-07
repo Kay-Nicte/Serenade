@@ -182,7 +182,8 @@ export default function RootLayout() {
         const update = await Updates.checkForUpdateAsync();
         if (update.isAvailable) {
           await Updates.fetchUpdateAsync();
-          await Updates.reloadAsync();
+          // Don't call reloadAsync() here — it triggers crash protection rollback.
+          // The update will apply automatically on next cold start.
         }
       } catch { /* silent */ }
     })();

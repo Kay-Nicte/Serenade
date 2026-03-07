@@ -1511,7 +1511,7 @@ function makeStyles(c: ReturnType<typeof useColors>) {
     premiumExpiry: {
       fontSize: 11,
       fontFamily: Fonts.body,
-      color: '#C49000',
+      color: c.goldText,
       marginLeft: 4,
     },
     bio: {

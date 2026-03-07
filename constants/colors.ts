@@ -60,10 +60,10 @@ export const darkColors = {
   error: '#E07070',
   warning: '#E0C070',
 
-  goldBg: '#2E2420',
-  goldBorder: '#4A3D30',
-  goldText: '#D4B896',
-  goldAccent: '#C4A06A',
+  goldBg: '#2A2220',
+  goldBorder: '#4A3D32',
+  goldText: '#C8AD8A',
+  goldAccent: '#B89B6A',
 
   overlay: 'rgba(0,0,0,0.7)',
 
