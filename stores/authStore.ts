@@ -66,6 +66,8 @@ interface AuthState {
   isProfileComplete: boolean;
   isVerified: boolean;
   isPasswordRecovery: boolean;
+  isProfileFetched: boolean;
+  suppressRecoveryRedirect: boolean;
   initialize: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
@@ -73,6 +75,7 @@ interface AuthState {
   forceReset: () => void;
   setPasswordRecovery: () => void;
   clearPasswordRecovery: () => void;
+  setSuppressRecoveryRedirect: (v: boolean) => void;
 }
 
 // Supabase may return text[] as PostgreSQL literal "{val1,val2}" or as an array
@@ -113,6 +116,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isProfileComplete: false,
   isVerified: false,
   isPasswordRecovery: false,
+  isProfileFetched: false,
+  suppressRecoveryRedirect: false,
 
   initialize: async () => {
     try {
@@ -130,8 +135,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     // Listen for auth changes
     supabase.auth.onAuthStateChange(async (event, session) => {
-      set({ session, user: session?.user ?? null });
-      if (event === 'PASSWORD_RECOVERY') {
+      console.log('[Auth] onAuthStateChange:', event, 'session?', !!session);
+      set({ session, user: session?.user ?? null, isProfileFetched: false });
+      if (event === 'PASSWORD_RECOVERY' && !get().suppressRecoveryRedirect) {
+        console.log('[Auth] PASSWORD_RECOVERY event received');
         set({ isPasswordRecovery: true });
       }
       if (session?.user) {
@@ -140,7 +147,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           showToast(i18n.t('auth.emailVerified'), 'success', 5000);
         }
       } else {
-        set({ profile: null, isProfileComplete: false });
+        set({ profile: null, isProfileComplete: false, isProfileFetched: true });
       }
     });
   },
@@ -157,6 +164,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     if (error) {
       reportError(error, { source: 'authStore.fetchProfile' });
+      set({ isProfileFetched: true });
       return;
     }
 
@@ -169,6 +177,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       profile: normalizeProfile(data),
       isProfileComplete: data?.is_profile_complete ?? false,
       isVerified: data?.is_verified ?? false,
+      isProfileFetched: true,
     });
   },
 
@@ -187,34 +196,24 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signOut: async () => {
-    try {
-      const { updatePresence } = await import('@/lib/presence');
-      await updatePresence(false);
-    } catch {
-      // Presence cleanup is best-effort
-    }
-    try {
-      const { removePushTokenFromServer } = await import('@/lib/notifications');
-      await removePushTokenFromServer();
-    } catch {
-      // Push token cleanup is best-effort; don't block sign out
-    }
-    try {
-      const { logoutUser } = await import('@/lib/purchases');
-      await logoutUser();
-    } catch {
-      // RevenueCat cleanup is best-effort
-    }
+    // Run cleanup in parallel so logout isn't slow
+    await Promise.allSettled([
+      import('@/lib/presence').then((m) => m.updatePresence(false)),
+      import('@/lib/notifications').then((m) => m.removePushTokenFromServer()),
+      import('@/lib/purchases').then((m) => m.logoutUser()),
+    ]);
+    // Force reset immediately so UI navigates to login
+    get().forceReset();
     try {
       await auth.signOut();
     } catch {
-      // Sign out may fail if session is already invalid; force reset anyway
+      // Sign out may fail if session is already invalid; already reset above
     }
-    get().forceReset();
   },
 
   setPasswordRecovery: () => set({ isPasswordRecovery: true }),
   clearPasswordRecovery: () => set({ isPasswordRecovery: false }),
+  setSuppressRecoveryRedirect: (v: boolean) => set({ suppressRecoveryRedirect: v }),
 
   forceReset: () => {
     useProfileStore.getState().reset();
@@ -236,6 +235,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       user: null,
       profile: null,
       isProfileComplete: false,
+      isProfileFetched: false,
       isVerified: false,
     });
   },

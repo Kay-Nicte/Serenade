@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { ActivityIndicator, Alert, View, StyleSheet } from 'react-native';
+import { Stack, useRouter, useSegments, useGlobalSearchParams } from 'expo-router';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_700Bold_Italic } from '@expo-google-fonts/playfair-display';
 import { DMSans_400Regular, DMSans_500Medium, DMSans_600SemiBold, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
 import * as SplashScreen from 'expo-splash-screen';
@@ -33,33 +33,67 @@ import '@/i18n';
 SplashScreen.preventAutoHideAsync();
 
 async function extractSessionFromUrl(url: string) {
-  if (!url.includes('reset-password')) return;
+  console.log('[DeepLink] extractSessionFromUrl called with:', url);
 
-  const parsed = new URL(url);
-  const fragment = parsed.hash.substring(1);
+  // Parse query params and fragment manually (new URL() can fail with custom schemes on Hermes)
+  const queryString = url.split('?')[1]?.split('#')[0] ?? '';
+  const fragment = url.split('#')[1] ?? '';
+  const queryParams = new URLSearchParams(queryString);
+  const code = queryParams.get('code');
+
+  console.log('[DeepLink] Parsed → code:', !!code, 'fragment length:', fragment.length);
+
+  // PKCE flow: Supabase v2 sends a ?code= parameter for email actions
+  // (password reset, magic links, email verification)
+  if (code) {
+    console.log('[DeepLink] PKCE code found:', code.substring(0, 10) + '...');
+    if (url.includes('reset-password')) {
+      useAuthStore.getState().setPasswordRecovery();
+      console.log('[DeepLink] Password recovery flag set');
+    }
+    const result = await supabase.auth.exchangeCodeForSession(code);
+    if (result.error) {
+      console.log('[DeepLink] exchangeCodeForSession ERROR:', result.error.message);
+    } else {
+      console.log('[DeepLink] exchangeCodeForSession SUCCESS, user:', result.data.user?.id);
+    }
+    return;
+  }
+
+  // Implicit flow: tokens in hash fragment (used by OAuth redirects)
+  if (!fragment) {
+    console.log('[DeepLink] No code or fragment, ignoring URL');
+    return;
+  }
+
   const params = new URLSearchParams(fragment);
-
   const access_token = params.get('access_token');
   const refresh_token = params.get('refresh_token');
-  const type = params.get('type');
 
-  if (access_token && refresh_token) {
-    // Set recovery flag BEFORE setSession so AuthGuard routes correctly.
-    // supabase.auth.setSession fires SIGNED_IN (not PASSWORD_RECOVERY),
-    // so we derive the flag from the URL type ourselves.
-    if (type === 'recovery') {
-      useAuthStore.getState().setPasswordRecovery();
-    }
-    await supabase.auth.setSession({ access_token, refresh_token });
+  if (!access_token || !refresh_token) {
+    console.log('[DeepLink] Fragment found but no tokens');
+    return;
   }
+
+  console.log('[DeepLink] Implicit flow tokens found');
+  if (params.get('type') === 'recovery' || url.includes('reset-password')) {
+    useAuthStore.getState().setPasswordRecovery();
+    console.log('[DeepLink] Password recovery flag set');
+  }
+
+  const { error } = await supabase.auth.setSession({ access_token, refresh_token });
+  console.log('[DeepLink] setSession result:', error?.message ?? 'success');
 }
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { isLoading, isAuthenticated, isProfileComplete } = useAuth();
+  const { isLoading, isAuthenticated, isProfileComplete, isProfileFetched } = useAuth();
   const isPasswordRecovery = useAuthStore((s) => s.isPasswordRecovery);
   const segments = useSegments();
+  const globalParams = useGlobalSearchParams();
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
+  const [exchangingCode, setExchangingCode] = useState(false);
+  const exchangedRef = useRef(false);
 
   useNotifications();
   useLocation();
@@ -70,14 +104,41 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     initPurchases();
   }, []);
 
-  // Handle deep links for password recovery
+  // Exchange PKCE code when expo-router delivers it via params (deep link)
+  useEffect(() => {
+    const code = globalParams.code as string | undefined;
+    const seg = segments[0] as string | undefined;
+    if (!code || exchangedRef.current || seg !== 'reset-password') return;
+    exchangedRef.current = true;
+    console.log('[AuthGuard] PKCE code found in global params, exchanging...');
+    setExchangingCode(true);
+    (async () => {
+      try {
+        const result = await supabase.auth.exchangeCodeForSession(code);
+        if (result.error) {
+          console.log('[AuthGuard] PKCE exchange error:', result.error.message);
+        } else {
+          console.log('[AuthGuard] PKCE exchange success, user:', result.data.user?.id);
+          useAuthStore.getState().setPasswordRecovery();
+        }
+      } catch (e) {
+        console.log('[AuthGuard] PKCE exchange exception:', e);
+      } finally {
+        setExchangingCode(false);
+      }
+    })();
+  }, [globalParams.code, segments]);
+
+  // Handle deep links for password recovery and OAuth redirects
   useEffect(() => {
     Linking.getInitialURL().then((url) => {
-      if (url) extractSessionFromUrl(url);
+      console.log('[DeepLink] getInitialURL:', url);
+      if (url) extractSessionFromUrl(url).catch((e) => console.log('[DeepLink] getInitialURL error:', e));
     });
 
     const subscription = Linking.addEventListener('url', (event) => {
-      extractSessionFromUrl(event.url);
+      console.log('[DeepLink] addEventListener url:', event.url);
+      extractSessionFromUrl(event.url).catch((e) => console.log('[DeepLink] addEventListener error:', e));
     });
 
     return () => subscription.remove();
@@ -102,30 +163,52 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (isLoading) return;
+    console.log('[AuthGuard] Effect run:', { isLoading, isAuthenticated, isProfileComplete, isProfileFetched, isPasswordRecovery, isReady, seg0: segments[0], code: globalParams.code, exchangingCode });
 
-    if (!isReady) {
-      setIsReady(true);
+    if (isLoading) { console.log('[AuthGuard] → waiting (loading)'); return; }
+    if (exchangingCode) { console.log('[AuthGuard] → waiting (exchanging PKCE code)'); return; }
+    if (useAuthStore.getState().suppressRecoveryRedirect) { console.log('[AuthGuard] → waiting (password reset in progress)'); return; }
+
+    // Password recovery can proceed without waiting for profile
+    if (isPasswordRecovery && isAuthenticated) {
+      const inResetPassword = segments[0] === 'reset-password';
+      if (!inResetPassword) router.replace('/reset-password');
+      console.log('[AuthGuard] → password recovery, inResetPassword:', inResetPassword);
       return;
     }
 
-    const inAuthGroup = segments[0] === '(auth)';
-    const inCompleteProfile = segments[0] === 'complete-profile';
-    const inResetPassword = segments[0] === 'reset-password';
-    const inPublicScreen =
-      segments[0] === 'terms-of-service' || segments[0] === 'privacy-policy';
+    // Wait for profile fetch to complete before making routing decisions
+    // This prevents redirecting to complete-profile during the brief moment
+    // between session being set and profile being fetched
+    if (isAuthenticated && !isProfileFetched) { console.log('[AuthGuard] → waiting (profile not fetched)'); return; }
 
-    // During password recovery, always navigate to reset-password
-    if (isPasswordRecovery && isAuthenticated && !inResetPassword) {
-      router.replace('/reset-password');
-    } else if (!isAuthenticated && !inAuthGroup && !inPublicScreen) {
+    if (!isReady) {
+      setIsReady(true);
+      console.log('[AuthGuard] → setting isReady=true, skipping this cycle');
+      return;
+    }
+
+    const seg = segments[0] as string | undefined;
+    const inAuthGroup = seg === '(auth)';
+    const inCompleteProfile = seg === 'complete-profile';
+    const inResetPassword = seg === 'reset-password';
+    const inPublicScreen = seg === 'terms-of-service' || seg === 'privacy-policy';
+    // Screens where an authenticated user with complete profile should NOT stay
+    const inPreLoginScreen = inAuthGroup || inCompleteProfile || seg === 'google-auth' || seg === '+not-found' || !seg;
+
+    if (!isAuthenticated && !inAuthGroup && !inPublicScreen && !inResetPassword) {
+      console.log('[AuthGuard] → redirect to welcome (not authenticated)');
       router.replace('/(auth)/welcome');
     } else if (isAuthenticated && !isProfileComplete && !inCompleteProfile && !inResetPassword) {
+      console.log('[AuthGuard] → redirect to complete-profile');
       router.replace('/complete-profile');
-    } else if (isAuthenticated && isProfileComplete && (inAuthGroup || inCompleteProfile)) {
-      router.replace('/(tabs)/index');
+    } else if (isAuthenticated && isProfileComplete && inPreLoginScreen) {
+      console.log('[AuthGuard] → redirect to tabs');
+      router.replace('/(tabs)');
+    } else {
+      console.log('[AuthGuard] → no action', { isAuthenticated, isProfileComplete, inPreLoginScreen, seg });
     }
-  }, [isLoading, isAuthenticated, isProfileComplete, isPasswordRecovery, segments, isReady, router]);
+  }, [isLoading, isAuthenticated, isProfileComplete, isPasswordRecovery, segments, isReady, router, isProfileFetched, exchangingCode]);
 
   const Colors = useColors();
 
@@ -182,10 +265,18 @@ export default function RootLayout() {
         const update = await Updates.checkForUpdateAsync();
         if (update.isAvailable) {
           await Updates.fetchUpdateAsync();
-          // Don't call reloadAsync() here — it triggers crash protection rollback.
-          // The update will apply automatically on next cold start.
+          Alert.alert(
+            'Actualización lista',
+            'Hay una nueva versión disponible.',
+            [
+              { text: 'Más tarde' },
+              { text: 'Reiniciar ahora', onPress: () => Updates.reloadAsync() },
+            ]
+          );
         }
-      } catch { /* silent */ }
+      } catch (e: any) {
+        Alert.alert('OTA error', e?.message ?? String(e));
+      }
     })();
   }, []);
 

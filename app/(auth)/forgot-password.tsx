@@ -6,7 +6,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -17,56 +16,150 @@ import { Button } from '@/components/ui/Button';
 import { useColors } from '@/hooks/useColors';
 import { Fonts } from '@/constants/fonts';
 import { supabase } from '@/lib/supabase';
+import { showToast } from '@/stores/toastStore';
+import { useAuthStore } from '@/stores/authStore';
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [step, setStep] = useState<'email' | 'code'>('email');
+  const [otp, setOtp] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const Colors = useColors();
   const styles = makeStyles(Colors);
 
-  const handleReset = async () => {
+  const handleSendCode = async () => {
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      Alert.alert(t('common.error'), t('auth.errorInvalidEmail'));
+      setErrors({ email: t('auth.errorInvalidEmail') });
       return;
     }
-
+    setErrors({});
     setLoading(true);
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(
-        email.trim(),
-        { redirectTo: 'serenade://reset-password' }
-      );
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim());
       if (error) throw error;
-      setSent(true);
+      setStep('code');
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : t('auth.errorGeneric');
-      Alert.alert(t('common.error'), message);
+      showToast(message, 'error');
     } finally {
       setLoading(false);
     }
   };
 
-  if (sent) {
+  const handleVerifyAndReset = async () => {
+    const newErrors: Record<string, string> = {};
+    if (!otp || otp.length < 6) {
+      newErrors.otp = t('auth.errorInvalidCode', { defaultValue: 'Enter the code from your email' });
+    }
+    if (!password || password.length < 6) {
+      newErrors.password = t('auth.errorPasswordShort');
+    }
+    if (password !== confirmPassword) {
+      newErrors.confirmPassword = t('auth.errorPasswordMismatch');
+    }
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
+    setLoading(true);
+    try {
+      // Suppress AuthGuard navigation during the entire verify+update flow
+      useAuthStore.getState().setSuppressRecoveryRedirect(true);
+
+      const { error: verifyError } = await supabase.auth.verifyOtp({
+        email: email.trim(),
+        token: otp.trim(),
+        type: 'recovery',
+      });
+      if (verifyError) throw verifyError;
+
+      // Now we have a valid session, update the password
+      const { error: updateError } = await supabase.auth.updateUser({
+        password,
+      });
+      if (updateError) throw updateError;
+
+      showToast(t('auth.passwordUpdatedMessage'));
+      router.replace('/(auth)/login');
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : t('auth.errorGeneric');
+      showToast(message, 'error');
+    } finally {
+      useAuthStore.getState().setSuppressRecoveryRedirect(false);
+      setLoading(false);
+    }
+  };
+
+  if (step === 'code') {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.content}>
-          <View style={styles.successContainer}>
-            <Ionicons name="mail-outline" size={64} color={Colors.primary} />
-            <Text style={styles.successTitle}>{t('auth.resetLinkSent')}</Text>
-            <Text style={styles.successMessage}>
-              {t('auth.resetLinkSentMessage')}
+        <KeyboardAvoidingView
+          style={styles.content}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          <TouchableOpacity
+            onPress={() => setStep('email')}
+            style={styles.backButton}
+            hitSlop={8}
+          >
+            <Ionicons name="arrow-back" size={24} color={Colors.text} />
+          </TouchableOpacity>
+
+          <View style={styles.header}>
+            <Ionicons name="mail-outline" size={48} color={Colors.primary} />
+            <Text style={styles.title}>{t('auth.resetCodeTitle', { defaultValue: 'Check your email' })}</Text>
+            <Text style={styles.subtitle}>
+              {t('auth.resetCodeSubtitle', { defaultValue: 'Enter the 6-digit code we sent to {{email}} and your new password', email })}
             </Text>
+          </View>
+
+          <View style={styles.form}>
+            <Input
+              label={t('auth.verificationCode', { defaultValue: 'Verification code' })}
+              value={otp}
+              onChangeText={setOtp}
+              keyboardType="number-pad"
+              maxLength={8}
+              autoComplete="one-time-code"
+              error={errors.otp}
+            />
+            <Input
+              label={t('auth.newPassword')}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              autoComplete="new-password"
+              error={errors.password}
+            />
+            <Input
+              label={t('auth.confirmPassword')}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+              autoComplete="new-password"
+              error={errors.confirmPassword}
+            />
+
             <Button
-              title={t('auth.backToLogin')}
-              onPress={() => router.replace('/(auth)/login')}
-              variant="outline"
+              title={t('auth.updatePassword')}
+              onPress={handleVerifyAndReset}
+              loading={loading}
               style={styles.button}
             />
+
+            <TouchableOpacity onPress={handleSendCode} style={styles.resendLink}>
+              <Text style={styles.resendText}>
+                {t('auth.resendCode', { defaultValue: 'Resend code' })}
+              </Text>
+            </TouchableOpacity>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }
@@ -98,11 +191,12 @@ export default function ForgotPasswordScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
+            error={errors.email}
           />
 
           <Button
             title={t('auth.sendResetLink')}
-            onPress={handleReset}
+            onPress={handleSendCode}
             loading={loading}
             style={styles.button}
           />
@@ -149,25 +243,14 @@ function makeStyles(c: ReturnType<typeof useColors>) {
     button: {
       marginTop: 8,
     },
-    successContainer: {
-      flex: 1,
-      justifyContent: 'center',
+    resendLink: {
       alignItems: 'center',
-      gap: 16,
-      paddingHorizontal: 16,
+      paddingTop: 8,
     },
-    successTitle: {
-      fontSize: 24,
-      fontFamily: Fonts.heading,
-      color: c.text,
-      textAlign: 'center',
-    },
-    successMessage: {
-      fontSize: 16,
-      fontFamily: Fonts.body,
-      color: c.textSecondary,
-      textAlign: 'center',
-      lineHeight: 22,
+    resendText: {
+      fontSize: 14,
+      fontFamily: Fonts.bodyMedium,
+      color: c.primary,
     },
   });
 }
