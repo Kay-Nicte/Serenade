@@ -552,7 +552,8 @@
     "redeem": "Redeem",
     "codeSuccess": "Code redeemed! Welcome to Premium!",
     "invalidCode": "Invalid code. Please check and try again.",
-    "completeProfileTeaserDiamond": "Fill in all fields marked with 💎 to get 7 days of Premium for free."
+    "completeProfileTeaserDiamond": "Fill in all fields marked with 💎 to get 7 days of Premium for free.",
+    "verifyPromo": "Verify your identity and get 1 free month of Premium"
   },
   "boost": {
     "title": "Profile Boost",
@@ -662,6 +663,7 @@
   "verification": {
     "title": "Verify your identity",
     "subtitle": "Take a selfie doing the gesture below so we can confirm you're real",
+    "promoSubtitle": "Launch promo: get 1 free month of Premium",
     "gestureInstruction": "Please do this gesture:",
     "gesture_peace_sign": "Peace sign (V with two fingers)",
     "gesture_thumbs_up": "Thumbs up",
@@ -686,6 +688,7 @@
     "verifyNow": "Verify now",
     "verifyLater": "Later",
     "banner": "You're invisible. Verify your identity so your likes and profile become visible",
+    "promoLaunch": "Launch promo: get 1 free month of Premium when you verify",
     "bannerPending": "Verification under review...",
     "cameraPermission": "Camera access is required for verification",
     "heldLikesInfo": "Your likes are saved! Once verified, they'll be visible to others.",

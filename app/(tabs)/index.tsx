@@ -184,11 +184,18 @@ export default function TodayScreen() {
             size={18}
             color={verificationStatus === 'pending' ? Colors.warning : Colors.primary}
           />
-          <Text style={[styles.verificationBannerText, verificationStatus === 'pending' && styles.verificationBannerTextPending]}>
-            {verificationStatus === 'pending'
-              ? t("verification.bannerPending")
-              : t("verification.banner")}
-          </Text>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.verificationBannerText, verificationStatus === 'pending' && styles.verificationBannerTextPending]}>
+              {verificationStatus === 'pending'
+                ? t("verification.bannerPending")
+                : t("verification.banner")}
+            </Text>
+            {verificationStatus !== 'pending' && (
+              <Text style={[styles.verificationBannerText, { color: Colors.goldText, marginTop: 2 }]}>
+                {t("verification.promoLaunch")}
+              </Text>
+            )}
+          </View>
           {verificationStatus !== 'pending' && (
             <Ionicons name="chevron-forward" size={16} color={Colors.primary} />
           )}

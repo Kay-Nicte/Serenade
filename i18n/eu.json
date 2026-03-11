@@ -552,7 +552,8 @@
     "redeem": "Trukatu",
     "codeSuccess": "Kodea trukatuta! Ongi etorri Premium-era!",
     "invalidCode": "Kode baliogabea. Egiaztatu eta saiatu berriro.",
-    "completeProfileTeaserDiamond": "💎 ikurrarekin markatutako eremu guztiak bete 7 eguneko Premium doan lortzeko."
+    "completeProfileTeaserDiamond": "💎 ikurrarekin markatutako eremu guztiak bete 7 eguneko Premium doan lortzeko.",
+    "verifyPromo": "Egiaztatu zure identitatea eta lortu Premium-aren hilabete bat doan"
   },
   "boost": {
     "title": "Profil Boosta",
@@ -662,6 +663,7 @@
   "verification": {
     "title": "Egiaztatu zure identitatea",
     "subtitle": "Egin selfie bat beheko keinua eginez benetakoa zarela baieztatzeko",
+    "promoSubtitle": "Abiarazte-promoa: lortu Premium-aren hilabete bat doan",
     "gestureInstruction": "Egin keinu hau:",
     "gesture_peace_sign": "Bake zeinua (V bi hatzekin)",
     "gesture_thumbs_up": "Hatza gora",
@@ -686,6 +688,7 @@
     "verifyNow": "Orain egiaztatu",
     "verifyLater": "Geroago",
     "banner": "Ikusezina zara. Egiaztatu zure identitatea zure like-ak eta profila ikusgai izan daitezen",
+    "promoLaunch": "Abiarazte-promoa: lortu Premium-aren hilabete bat doan zure identitatea egiaztatzerakoan",
     "bannerPending": "Egiaztapena aztertzen...",
     "cameraPermission": "Kameraren sarbidea behar da egiaztapenerako",
     "heldLikesInfo": "Zure like-ak gordeta daude! Egiaztatzen zarenean, ikusgai izango dira.",

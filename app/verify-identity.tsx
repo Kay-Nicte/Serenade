@@ -119,6 +119,12 @@ export default function VerifyIdentityScreen() {
 
           <Text style={styles.title}>{t('verification.title')}</Text>
           <Text style={styles.subtitle}>{t('verification.subtitle')}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 8, backgroundColor: Colors.goldBg, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10 }}>
+            <Ionicons name="gift-outline" size={16} color={Colors.goldText} />
+            <Text style={{ fontSize: 13, fontFamily: Fonts.bodySemiBold, color: Colors.goldText }}>
+              {t('verification.promoSubtitle')}
+            </Text>
+          </View>
 
           {gestureLoading ? (
             <ActivityIndicator size="large" color={Colors.primary} style={{ marginTop: 32 }} />

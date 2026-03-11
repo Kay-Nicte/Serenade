@@ -43,6 +43,7 @@ function isBestValue(identifier: string): boolean {
 export default function PremiumScreen() {
   const { t } = useTranslation();
   const router = useRouter();
+  const profile = useAuthStore((s) => s.profile);
   const fetchProfile = useAuthStore((s) => s.fetchProfile);
   const [packages, setPackages] = useState<PurchasesPackage[]>([]);
   const [selectedPkg, setSelectedPkg] = useState<PurchasesPackage | null>(null);
@@ -162,6 +163,21 @@ export default function PremiumScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={{ fontSize: 44 }}>💎</Text>
         <Text style={styles.title}>{t('premium.choosePlan')}</Text>
+
+        {/* Verification promo */}
+        {!profile?.is_verified && profile?.verification_status !== 'pending' && (
+          <TouchableOpacity
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: Colors.goldBg, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 12, marginBottom: 8 }}
+            onPress={() => router.push('/verify-identity')}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="gift-outline" size={18} color={Colors.goldText} />
+            <Text style={{ flex: 1, fontSize: 13, fontFamily: Fonts.bodySemiBold, color: Colors.goldText }}>
+              {t('premium.verifyPromo')}
+            </Text>
+            <Ionicons name="chevron-forward" size={16} color={Colors.goldText} />
+          </TouchableOpacity>
+        )}
 
         {/* Benefits */}
         <View style={styles.benefits}>

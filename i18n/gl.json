@@ -552,7 +552,8 @@
     "redeem": "Canxear",
     "codeSuccess": "Código canxeado! Benvida a Premium!",
     "invalidCode": "Código non válido. Revísao e téntao de novo.",
-    "completeProfileTeaserDiamond": "Enche todos os campos marcados con 💎 para conseguir 7 días de Premium gratis."
+    "completeProfileTeaserDiamond": "Enche todos os campos marcados con 💎 para conseguir 7 días de Premium gratis.",
+    "verifyPromo": "Verifica a túa identidade e consegue 1 mes de Premium gratis"
   },
   "boost": {
     "title": "Boost de perfil",
@@ -662,6 +663,7 @@
   "verification": {
     "title": "Verifica a túa identidade",
     "subtitle": "Fai un selfie co xesto de abaixo para confirmar que es real",
+    "promoSubtitle": "Promo de lanzamento: consegue 1 mes de Premium gratis",
     "gestureInstruction": "Fai este xesto:",
     "gesture_peace_sign": "Signo da paz (V con dous dedos)",
     "gesture_thumbs_up": "Polgar arriba",
@@ -686,6 +688,7 @@
     "verifyNow": "Verificar agora",
     "verifyLater": "Máis tarde",
     "banner": "Es invisible. Verifica a túa identidade para que os teus likes e perfil sexan visibles",
+    "promoLaunch": "Promo de lanzamento: consegue 1 mes de Premium gratis ao verificarte",
     "bannerPending": "Verificación en revisión...",
     "cameraPermission": "Necesítase acceso á cámara para a verificación",
     "heldLikesInfo": "Os teus likes están gardados! Cando te verifiques, serán visibles.",

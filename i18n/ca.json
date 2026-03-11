@@ -552,7 +552,8 @@
     "redeem": "Bescanviar",
     "codeSuccess": "Codi bescanviat! Benvinguda a Premium!",
     "invalidCode": "Codi no vàlid. Revisa'l i torna-ho a provar.",
-    "completeProfileTeaserDiamond": "Omple tots els camps marcats amb 💎 per aconseguir 7 dies de Premium gratis."
+    "completeProfileTeaserDiamond": "Omple tots els camps marcats amb 💎 per aconseguir 7 dies de Premium gratis.",
+    "verifyPromo": "Verifica la teva identitat i aconsegueix 1 mes de Premium gratis"
   },
   "boost": {
     "title": "Boost de perfil",
@@ -662,6 +663,7 @@
   "verification": {
     "title": "Verifica la teva identitat",
     "subtitle": "Fes-te un selfie fent el gest de baix per confirmar que ets real",
+    "promoSubtitle": "Promo de llançament: aconsegueix 1 mes de Premium gratis",
     "gestureInstruction": "Fes aquest gest:",
     "gesture_peace_sign": "Signe de pau (V amb dos dits)",
     "gesture_thumbs_up": "Polze amunt",
@@ -686,6 +688,7 @@
     "verifyNow": "Verificar ara",
     "verifyLater": "Més tard",
     "banner": "Ets invisible. Verifica la teva identitat perquè els teus likes i perfil siguin visibles",
+    "promoLaunch": "Promo de llançament: aconsegueix 1 mes de Premium gratis en verificar-te",
     "bannerPending": "Verificació en revisió...",
     "cameraPermission": "Cal accés a la càmera per a la verificació",
     "heldLikesInfo": "Els teus likes estan guardats! Quan et verifiquis, seran visibles.",

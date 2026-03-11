@@ -723,6 +723,11 @@ export default function ProfileScreen() {
                     ? t('verification.bannerPending')
                     : t('verification.banner')}
                 </Text>
+                {profile?.verification_status !== 'pending' && (
+                  <Text style={[styles.verificationBannerSubtitle, { color: Colors.goldText, marginTop: 2 }]}>
+                    {t('verification.promoLaunch')}
+                  </Text>
+                )}
               </View>
               {profile?.verification_status !== 'pending' && (
                 <Ionicons name="chevron-forward" size={20} color={Colors.primary} />
