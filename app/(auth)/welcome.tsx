@@ -10,6 +10,7 @@ import { Fonts } from '@/constants/fonts';
 import { signInWithGoogle } from '@/lib/auth';
 import { useAuthStore } from '@/stores/authStore';
 import { showToast } from '@/stores/toastStore';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function WelcomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <View style={styles.content}>
         <View style={styles.hero}>
           <Text style={styles.title}>{t('welcome.title')}</Text>
@@ -76,6 +78,7 @@ export default function WelcomeScreen() {
           </TouchableOpacity>
         </View>
       </View>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

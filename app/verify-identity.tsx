@@ -19,6 +19,7 @@ import { useVerificationStore } from '@/stores/verificationStore';
 import { useAuthStore } from '@/stores/authStore';
 import { uploadVerificationSelfie } from '@/lib/storage';
 import { showToast } from '@/stores/toastStore';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 type Step = 'instruction' | 'camera' | 'preview';
 
@@ -104,6 +105,7 @@ export default function VerifyIdentityScreen() {
   if (step === 'instruction') {
     return (
       <SafeAreaView style={styles.container}>
+        <ResponsiveContainer>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Ionicons name="close" size={24} color={Colors.text} />
@@ -146,6 +148,7 @@ export default function VerifyIdentityScreen() {
             <Text style={styles.laterText}>{t('verification.verifyLater')}</Text>
           </TouchableOpacity>
         </View>
+        </ResponsiveContainer>
       </SafeAreaView>
     );
   }
@@ -189,6 +192,7 @@ export default function VerifyIdentityScreen() {
   // Step 3: Preview
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleRetake} style={styles.backButton}>
           <Ionicons name="chevron-back" size={24} color={Colors.text} />
@@ -237,6 +241,7 @@ export default function VerifyIdentityScreen() {
           <Text style={styles.secondaryButtonText}>{t('verification.retakePhoto')}</Text>
         </TouchableOpacity>
       </View>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

@@ -19,6 +19,7 @@ import { Fonts } from '@/constants/fonts';
 import { signUp } from '@/lib/auth';
 import { useAuthStore } from '@/stores/authStore';
 import { showToast } from '@/stores/toastStore';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -82,6 +83,7 @@ export default function RegisterScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -173,6 +175,7 @@ export default function RegisterScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

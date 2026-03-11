@@ -19,6 +19,7 @@ import { Fonts } from '@/constants/fonts';
 import { supabase } from '@/lib/supabase';
 import { Config } from '@/constants/config';
 import { PhotoCarousel } from '@/components/PhotoCarousel';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 import type { Profile } from '@/stores/authStore';
 
 function ensureArray(val: unknown): string[] {
@@ -265,6 +266,7 @@ export default function AdminProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -450,6 +452,7 @@ export default function AdminProfileScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

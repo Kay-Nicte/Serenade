@@ -19,6 +19,7 @@ import { ActionSheet, type ActionSheetOption } from '@/components/ActionSheet';
 import { Toast, useToast } from '@/components/Toast';
 import { showConfirm } from '@/components/ConfirmDialog';
 import { useAuthStore } from '@/stores/authStore';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 type ReportStatus = 'pending' | 'reviewed' | 'resolved' | 'dismissed';
 
@@ -315,6 +316,7 @@ export default function AdminScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <View style={styles.adminHeader}>
         <Text style={styles.title}>{t('admin.panelTitle')}</Text>
       </View>
@@ -397,6 +399,7 @@ export default function AdminScreen() {
         onClose={() => setActionSheetVisible(false)}
       />
       <Toast visible={toast.visible} message={toast.message} variant={toast.variant} onDismiss={toast.dismiss} />
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

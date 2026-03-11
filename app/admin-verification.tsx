@@ -22,6 +22,7 @@ import { GESTURES } from '@/constants/gestures';
 import { supabase } from '@/lib/supabase';
 import { Config } from '@/constants/config';
 import { showToast } from '@/stores/toastStore';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 interface VerificationRequest {
   id: string;
@@ -277,6 +278,7 @@ export default function AdminVerificationScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -322,6 +324,7 @@ export default function AdminVerificationScreen() {
           )}
         </View>
       </Modal>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

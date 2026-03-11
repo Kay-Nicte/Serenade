@@ -9,6 +9,7 @@ import { useColors } from '@/hooks/useColors';
 import { Fonts } from '@/constants/fonts';
 import { supabase } from '@/lib/supabase';
 import { showToast } from '@/stores/toastStore';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 export default function VerifyEmailScreen() {
   const { t } = useTranslation();
@@ -37,6 +38,7 @@ export default function VerifyEmailScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <View style={styles.content}>
         <View style={styles.iconContainer}>
           <Ionicons name="mail-outline" size={64} color={Colors.primary} />
@@ -60,6 +62,7 @@ export default function VerifyEmailScreen() {
           />
         </View>
       </View>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

@@ -18,6 +18,7 @@ import { Fonts } from '@/constants/fonts';
 import { supabase } from '@/lib/supabase';
 import { showToast } from '@/stores/toastStore';
 import { useAuthStore } from '@/stores/authStore';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
@@ -99,6 +100,7 @@ export default function ForgotPasswordScreen() {
   if (step === 'code') {
     return (
       <SafeAreaView style={styles.container}>
+        <ResponsiveContainer>
         <KeyboardAvoidingView
           style={styles.content}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -160,12 +162,14 @@ export default function ForgotPasswordScreen() {
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
+        </ResponsiveContainer>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <KeyboardAvoidingView
         style={styles.content}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -202,6 +206,7 @@ export default function ForgotPasswordScreen() {
           />
         </View>
       </KeyboardAvoidingView>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

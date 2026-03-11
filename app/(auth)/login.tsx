@@ -19,6 +19,7 @@ import { Fonts } from '@/constants/fonts';
 import { signIn, signInWithGoogle } from '@/lib/auth';
 import { useAuthStore } from '@/stores/authStore';
 import { showToast } from '@/stores/toastStore';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -60,6 +61,7 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <KeyboardAvoidingView
         style={styles.content}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -149,6 +151,7 @@ export default function LoginScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

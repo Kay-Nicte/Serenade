@@ -5,7 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
-  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -18,8 +18,8 @@ import { Fonts } from '@/constants/fonts';
 import { supabase } from '@/lib/supabase';
 import { getPhotoUrl } from '@/lib/storage';
 import { PhotoCarousel } from '@/components/PhotoCarousel';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
+import { useResponsive } from '@/hooks/useResponsive';
 
 interface ProfileData {
   id: string;
@@ -88,6 +88,9 @@ export default function MatchProfileScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const Colors = useColors();
+  const { width } = useWindowDimensions();
+  const { contentMaxWidth } = useResponsive();
+  const carouselWidth = Math.min(width, contentMaxWidth);
   const styles = makeStyles(Colors);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [photos, setPhotos] = useState<{ uri: string }[]>([]);
@@ -163,6 +166,7 @@ export default function MatchProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -181,7 +185,7 @@ export default function MatchProfileScreen() {
         <PhotoCarousel
           photos={photos}
           fallbackUri={profile.avatar_url}
-          width={SCREEN_WIDTH}
+          width={carouselWidth}
           aspectRatio={3 / 4}
         />
 
@@ -388,6 +392,7 @@ export default function MatchProfileScreen() {
           )}
         </View>
       </ScrollView>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

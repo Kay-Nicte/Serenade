@@ -26,6 +26,7 @@ import { usePhotoStore, type Photo } from '@/stores/photoStore';
 import { pickImage } from '@/lib/storage';
 import { supabase } from '@/lib/supabase';
 import { showToast } from '@/stores/toastStore';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 const LOOKING_FOR = LOOKING_FOR_OPTIONS;
 
@@ -207,6 +208,7 @@ export default function CompleteProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -502,6 +504,7 @@ export default function CompleteProfileScreen() {
           </View>
         </View>
       </Modal>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

@@ -32,6 +32,7 @@ import {
 import { supabase } from '@/lib/supabase';
 import i18n from '@/i18n';
 import { useBlock } from '@/hooks/useBlock';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 export default function SettingsScreen() {
   const { t } = useTranslation();
@@ -177,7 +178,7 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
+      <ResponsiveContainer>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -397,7 +398,7 @@ export default function SettingsScreen() {
             <View style={styles.row}>
               <Ionicons name="information-circle-outline" size={20} color={Colors.text} />
               <Text style={styles.rowLabel}>{t('settings.version')}</Text>
-              <Text style={styles.rowValue}>{appVersion} (OTA-7)</Text>
+              <Text style={styles.rowValue}>{appVersion}</Text>
             </View>
           </View>
         </View>
@@ -491,7 +492,7 @@ export default function SettingsScreen() {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-      </>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

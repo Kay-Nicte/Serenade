@@ -21,6 +21,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useDailyStatsStore } from '@/stores/dailyStatsStore';
 import { useBoostStore } from '@/stores/boostStore';
 import { showToast } from '@/stores/toastStore';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 const PROMO_CODES: Record<string, number> = {
   SERENADEVIP: 365,
@@ -151,6 +152,7 @@ export default function PremiumScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
           <Ionicons name="close" size={24} color={Colors.text} />
@@ -265,6 +267,7 @@ export default function PremiumScreen() {
           </View>
         </View>
       </ScrollView>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }
