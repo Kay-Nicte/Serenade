@@ -18,6 +18,7 @@ import { showToast } from '@/stores/toastStore';
 import { useAuthStore } from '@/stores/authStore';
 import { updatePasswordFromReset } from '@/lib/auth';
 import { supabase } from '@/lib/supabase';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 export default function ResetPasswordScreen() {
   const router = useRouter();
@@ -96,15 +97,18 @@ export default function ResetPasswordScreen() {
   if (exchanging) {
     return (
       <SafeAreaView style={styles.container}>
+        <ResponsiveContainer>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color={Colors.primary} />
         </View>
+        </ResponsiveContainer>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <KeyboardAvoidingView
         style={styles.content}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -140,6 +144,7 @@ export default function ResetPasswordScreen() {
           />
         </View>
       </KeyboardAvoidingView>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

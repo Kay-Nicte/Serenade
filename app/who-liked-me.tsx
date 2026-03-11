@@ -17,6 +17,7 @@ import { useColors } from '@/hooks/useColors';
 import { Fonts } from '@/constants/fonts';
 import { useAuthStore } from '@/stores/authStore';
 import { supabase } from '@/lib/supabase';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const GRID_PADDING = 24;
@@ -69,6 +70,7 @@ export default function WhoLikedMeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -151,6 +153,7 @@ export default function WhoLikedMeScreen() {
           />
         </>
       )}
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

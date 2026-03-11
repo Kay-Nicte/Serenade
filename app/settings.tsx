@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  Linking,
 } from 'react-native';
 import { showToast } from '@/stores/toastStore';
 import { showConfirm } from '@/components/ConfirmDialog';
@@ -19,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import { useColors } from '@/hooks/useColors';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 import { useThemeStore, type ThemePreference } from '@/stores/themeStore';
 import { Fonts } from '@/constants/fonts';
 import { useAuthStore } from '@/stores/authStore';
@@ -176,6 +178,7 @@ export default function SettingsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -400,6 +403,22 @@ export default function SettingsScreen() {
           </View>
         </View>
 
+        {/* Contact */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.support')}</Text>
+          <View style={styles.card}>
+            <TouchableOpacity
+              style={styles.row}
+              onPress={() => Linking.openURL('mailto:serenade.dating@gmail.com')}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="mail-outline" size={20} color={Colors.text} />
+              <Text style={styles.rowLabel}>{t('settings.contactUs')}</Text>
+              <Ionicons name="chevron-forward" size={18} color={Colors.textTertiary} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         {/* Sign Out */}
         <View style={styles.section}>
           <View style={styles.card}>
@@ -473,6 +492,7 @@ export default function SettingsScreen() {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

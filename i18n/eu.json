@@ -8,6 +8,7 @@
     "next": "Hurrengoa",
     "back": "Atzera",
     "done": "Egina",
+    "updateReady": "Bertsio berria prest. Sakatu eguneratzeko!",
     "or": "edo",
     "offline": "Internet konexiorik gabe",
     "photoPermissionDenied": "Baimendu zure galeriara sarbidea gailuaren ezarpenetan argazkiak gehitzeko."
@@ -403,7 +404,21 @@
     "moderatorRemoved": "Moderatzailea ondo kendu da.",
     "moderatorBadge": "Moderatzailea",
     "panelTitle": "Admin Panela",
-    "reports": "Txostenak"
+    "reports": "Txostenak",
+    "auditLog": "Historiala",
+    "noAuditLog": "Ez dago ekintza-erregistrorik",
+    "auditAll": "Denak",
+    "auditVerified": "Egiaztatuak",
+    "auditRejected": "Baztertuak",
+    "auditBanned": "Debekatuak",
+    "auditUnbanned": "Baimendutakoak",
+    "action_verification_approved": "Egiaztapena onartua",
+    "action_verification_rejected": "Egiaztapena baztertua",
+    "action_ban": "Debekatua",
+    "action_unban": "Baimendua",
+    "auditBy": "nork:",
+    "auditMatches": "{{count}} match sortu dira",
+    "auditRejectionReason": "Arrazoia: {{reason}}"
   },
   "discovery": {
     "title": "Aurkikuntza",
@@ -467,6 +482,8 @@
     "privacyPolicy": "Pribatutasun Politika",
     "about": "Honi buruz",
     "version": "Bertsioa",
+    "support": "Laguntza",
+    "contactUs": "Arazorik? Idatzi iezaguzu!",
     "blockedUsers": "Erabiltzaile bloketuak",
     "signOut": "Saioa itxi",
     "signOutConfirm": "Ziur zaude saioa itxi nahi duzula?",
@@ -535,7 +552,7 @@
     "redeem": "Trukatu",
     "codeSuccess": "Kodea trukatuta! Ongi etorri Premium-era!",
     "invalidCode": "Kode baliogabea. Egiaztatu eta saiatu berriro.",
-    "completeProfileTeaserDiamond": "◆ ikurrarekin markatutako eremu guztiak bete 7 eguneko Premium doan lortzeko."
+    "completeProfileTeaserDiamond": "💎 ikurrarekin markatutako eremu guztiak bete 7 eguneko Premium doan lortzeko."
   },
   "boost": {
     "title": "Profil Boosta",
@@ -668,7 +685,7 @@
     "approvedMessage": "Zure profila orain besteentzat ikusgai dago.",
     "verifyNow": "Orain egiaztatu",
     "verifyLater": "Geroago",
-    "banner": "Egiaztatu zure identitatea besteek zu ikusteko",
+    "banner": "Ikusezina zara. Egiaztatu zure identitatea zure like-ak eta profila ikusgai izan daitezen",
     "bannerPending": "Egiaztapena aztertzen...",
     "cameraPermission": "Kameraren sarbidea behar da egiaztapenerako",
     "heldLikesInfo": "Zure like-ak gordeta daude! Egiaztatzen zarenean, ikusgai izango dira.",

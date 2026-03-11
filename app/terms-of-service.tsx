@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import { useColors } from '@/hooks/useColors';
 import { Fonts } from '@/constants/fonts';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 export default function TermsOfServiceScreen() {
   const { t } = useTranslation();
@@ -15,6 +16,7 @@ export default function TermsOfServiceScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -29,6 +31,7 @@ export default function TermsOfServiceScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.body}>{t('legal.termsContent')}</Text>
       </ScrollView>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

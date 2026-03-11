@@ -7,14 +7,16 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  Dimensions,
   Alert,
+  useWindowDimensions,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
+import { useResponsive } from '@/hooks/useResponsive';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 import { Fonts } from '@/constants/fonts';
 import { Ionicons } from '@expo/vector-icons';
 import { useMatches } from '@/hooks/useMatches';
@@ -24,10 +26,8 @@ import { ActionSheet, type ActionSheetOption } from '@/components/ActionSheet';
 import type { Match } from '@/stores/matchStore';
 import type { IceBreaker } from '@/stores/iceBreakerStore';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const GRID_GAP = 12;
 const GRID_PADDING = 24;
-const ITEM_WIDTH = (SCREEN_WIDTH - GRID_PADDING * 2 - GRID_GAP) / 2;
 
 function formatMatchDate(isoDate: string): string {
   const date = new Date(isoDate);
@@ -148,7 +148,13 @@ function IceBreakerCard({
 export default function MatchesScreen() {
   const { t } = useTranslation();
   const Colors = useColors();
-  const styles = makeStyles(Colors);
+  const { matchColumns, contentMaxWidth, isTablet } = useResponsive();
+  const { width: screenWidth } = useWindowDimensions();
+  const effectiveWidth = isTablet ? Math.min(screenWidth, contentMaxWidth) : screenWidth;
+  const numColumns = matchColumns;
+  const totalGaps = (numColumns - 1) * GRID_GAP;
+  const itemWidth = (effectiveWidth - GRID_PADDING * 2 - totalGaps) / numColumns;
+  const styles = makeStyles(Colors, itemWidth);
   const router = useRouter();
   const { matches, isLoading, refresh } = useMatches();
   const {
@@ -250,6 +256,7 @@ export default function MatchesScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <Text style={styles.title}>{t('matches.title')}</Text>
 
       {isLoading && ibLoading && !hasContent ? (
@@ -263,9 +270,10 @@ export default function MatchesScreen() {
         </View>
       ) : (
         <FlatList
+          key={`matches-${numColumns}`}
           data={matches}
           keyExtractor={(item) => item.id}
-          numColumns={2}
+          numColumns={numColumns}
           columnWrapperStyle={styles.row}
           contentContainerStyle={styles.grid}
           ListHeaderComponent={renderIceBreakersHeader}
@@ -283,11 +291,12 @@ export default function MatchesScreen() {
         options={actionSheetOptions}
         onClose={() => setActionSheetMatch(null)}
       />
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }
 
-function makeStyles(c: ReturnType<typeof useColors>) {
+function makeStyles(c: ReturnType<typeof useColors>, itemWidth: number = 160) {
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -324,7 +333,7 @@ function makeStyles(c: ReturnType<typeof useColors>) {
       marginBottom: GRID_GAP,
     },
     matchCard: {
-      width: ITEM_WIDTH,
+      width: itemWidth,
       backgroundColor: c.surface,
       borderRadius: 16,
       overflow: 'hidden',

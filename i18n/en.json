@@ -8,6 +8,7 @@
     "next": "Next",
     "back": "Back",
     "done": "Done",
+    "updateReady": "New version ready. Tap to update!",
     "or": "or",
     "offline": "No internet connection",
     "photoPermissionDenied": "Allow access to your gallery in device settings to add photos."
@@ -403,7 +404,21 @@
     "moderatorRemoved": "Moderator removed successfully.",
     "moderatorBadge": "Moderator",
     "panelTitle": "Admin Panel",
-    "reports": "Reports"
+    "reports": "Reports",
+    "auditLog": "History",
+    "noAuditLog": "No action records",
+    "auditAll": "All",
+    "auditVerified": "Verified",
+    "auditRejected": "Rejected",
+    "auditBanned": "Banned",
+    "auditUnbanned": "Unbanned",
+    "action_verification_approved": "Verification approved",
+    "action_verification_rejected": "Verification rejected",
+    "action_ban": "Banned",
+    "action_unban": "Unbanned",
+    "auditBy": "by",
+    "auditMatches": "{{count}} matches created",
+    "auditRejectionReason": "Reason: {{reason}}"
   },
   "discovery": {
     "title": "Discovery",
@@ -467,6 +482,8 @@
     "privacyPolicy": "Privacy Policy",
     "about": "About",
     "version": "Version",
+    "support": "Support",
+    "contactUs": "Need help? Contact us!",
     "blockedUsers": "Blocked users",
     "signOut": "Sign out",
     "signOutConfirm": "Are you sure you want to sign out?",
@@ -535,7 +552,7 @@
     "redeem": "Redeem",
     "codeSuccess": "Code redeemed! Welcome to Premium!",
     "invalidCode": "Invalid code. Please check and try again.",
-    "completeProfileTeaserDiamond": "Fill in all fields marked with ◆ to get 7 days of Premium for free."
+    "completeProfileTeaserDiamond": "Fill in all fields marked with 💎 to get 7 days of Premium for free."
   },
   "boost": {
     "title": "Profile Boost",
@@ -668,7 +685,7 @@
     "approvedMessage": "Your profile is now visible to others.",
     "verifyNow": "Verify now",
     "verifyLater": "Later",
-    "banner": "Verify your identity to be visible to others",
+    "banner": "You're invisible. Verify your identity so your likes and profile become visible",
     "bannerPending": "Verification under review...",
     "cameraPermission": "Camera access is required for verification",
     "heldLikesInfo": "Your likes are saved! Once verified, they'll be visible to others.",

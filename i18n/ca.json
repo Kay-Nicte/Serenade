@@ -8,6 +8,7 @@
     "next": "Següent",
     "back": "Tornar",
     "done": "Fet",
+    "updateReady": "Nova versió llesta. Toca per actualitzar!",
     "or": "o",
     "offline": "Sense connexió a internet",
     "photoPermissionDenied": "Permet l'accés a la teva galeria als ajustos del dispositiu per poder afegir fotos."
@@ -403,7 +404,21 @@
     "moderatorRemoved": "Moderadora eliminada correctament.",
     "moderatorBadge": "Moderadora",
     "panelTitle": "Panell d'Admin",
-    "reports": "Informes"
+    "reports": "Informes",
+    "auditLog": "Historial",
+    "noAuditLog": "No hi ha registres d'accions",
+    "auditAll": "Tot",
+    "auditVerified": "Verificades",
+    "auditRejected": "Rebutjades",
+    "auditBanned": "Bloquejades",
+    "auditUnbanned": "Desbloquejades",
+    "action_verification_approved": "Verificació aprovada",
+    "action_verification_rejected": "Verificació rebutjada",
+    "action_ban": "Bloquejada",
+    "action_unban": "Desbloquejada",
+    "auditBy": "per",
+    "auditMatches": "{{count}} matches creats",
+    "auditRejectionReason": "Motiu: {{reason}}"
   },
   "discovery": {
     "title": "Descobriment",
@@ -467,6 +482,8 @@
     "privacyPolicy": "Política de Privacitat",
     "about": "Sobre",
     "version": "Versió",
+    "support": "Ajuda",
+    "contactUs": "Algun problema? Escriu-nos!",
     "blockedUsers": "Usuàries bloquejades",
     "signOut": "Tancar sessió",
     "signOutConfirm": "Estàs segura que vols tancar sessió?",
@@ -535,7 +552,7 @@
     "redeem": "Bescanviar",
     "codeSuccess": "Codi bescanviat! Benvinguda a Premium!",
     "invalidCode": "Codi no vàlid. Revisa'l i torna-ho a provar.",
-    "completeProfileTeaserDiamond": "Omple tots els camps marcats amb ◆ per aconseguir 7 dies de Premium gratis."
+    "completeProfileTeaserDiamond": "Omple tots els camps marcats amb 💎 per aconseguir 7 dies de Premium gratis."
   },
   "boost": {
     "title": "Boost de perfil",
@@ -668,7 +685,7 @@
     "approvedMessage": "El teu perfil ara és visible per a les altres.",
     "verifyNow": "Verificar ara",
     "verifyLater": "Més tard",
-    "banner": "Verifica la teva identitat perquè les altres et puguin veure",
+    "banner": "Ets invisible. Verifica la teva identitat perquè els teus likes i perfil siguin visibles",
     "bannerPending": "Verificació en revisió...",
     "cameraPermission": "Cal accés a la càmera per a la verificació",
     "heldLikesInfo": "Els teus likes estan guardats! Quan et verifiquis, seran visibles.",

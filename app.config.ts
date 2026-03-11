@@ -5,7 +5,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: 'Serenade',
   slug: 'Serenade',
   version: '1.0.0',
-  orientation: 'portrait',
+  orientation: 'default',
   icon: './assets/images/icon.png',
   scheme: 'serenade',
   userInterfaceStyle: 'automatic',
@@ -13,7 +13,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     bundleIdentifier: 'com.ixabel.serenade',
     supportsTablet: true,
-    googleServicesFile: './GoogleService-Info.plist',
     infoPlist: {
       NSCameraUsageDescription:
         'Serenade needs access to your camera to take profile photos.',
@@ -23,6 +22,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         'Serenade needs your location to share it on safe dates and show nearby profiles.',
       NSMicrophoneUsageDescription:
         'Serenade needs access to your microphone to send audio messages.',
+      ITSAppUsesNonExemptEncryption: false,
     },
   },
   android: {

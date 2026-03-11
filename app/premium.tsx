@@ -14,6 +14,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { type PurchasesPackage } from 'react-native-purchases';
 import { useColors } from '@/hooks/useColors';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 import { Fonts } from '@/constants/fonts';
 import { getOfferings, purchasePackage, restorePurchases } from '@/lib/purchases';
 import { supabase } from '@/lib/supabase';
@@ -151,6 +152,7 @@ export default function PremiumScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
           <Ionicons name="close" size={24} color={Colors.text} />
@@ -265,6 +267,7 @@ export default function PremiumScreen() {
           </View>
         </View>
       </ScrollView>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

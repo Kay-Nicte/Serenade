@@ -5,7 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
-  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -14,12 +14,12 @@ import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useColors } from '@/hooks/useColors';
+import { useResponsive } from '@/hooks/useResponsive';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 import { Fonts } from '@/constants/fonts';
 import { supabase } from '@/lib/supabase';
 import { getPhotoUrl } from '@/lib/storage';
 import { PhotoCarousel } from '@/components/PhotoCarousel';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface ProfileData {
   id: string;
@@ -88,6 +88,9 @@ export default function MatchProfileScreen() {
   const router = useRouter();
   const { t } = useTranslation();
   const Colors = useColors();
+  const { contentMaxWidth, isTablet } = useResponsive();
+  const { width: screenWidth } = useWindowDimensions();
+  const carouselWidth = isTablet ? Math.min(screenWidth, contentMaxWidth) : screenWidth;
   const styles = makeStyles(Colors);
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [photos, setPhotos] = useState<{ uri: string }[]>([]);
@@ -163,6 +166,7 @@ export default function MatchProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -181,7 +185,7 @@ export default function MatchProfileScreen() {
         <PhotoCarousel
           photos={photos}
           fallbackUri={profile.avatar_url}
-          width={SCREEN_WIDTH}
+          width={carouselWidth}
           aspectRatio={3 / 4}
         />
 
@@ -388,6 +392,7 @@ export default function MatchProfileScreen() {
           )}
         </View>
       </ScrollView>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

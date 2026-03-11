@@ -8,6 +8,7 @@
     "next": "Weiter",
     "back": "Zurück",
     "done": "Fertig",
+    "updateReady": "Neue Version bereit. Tippe zum Aktualisieren!",
     "or": "oder",
     "offline": "Keine Internetverbindung",
     "photoPermissionDenied": "Erlaube den Zugriff auf deine Galerie in den Geräteeinstellungen, um Fotos hinzuzufügen."
@@ -403,7 +404,21 @@
     "moderatorRemoved": "Moderatorin erfolgreich entfernt.",
     "moderatorBadge": "Moderatorin",
     "panelTitle": "Admin-Panel",
-    "reports": "Meldungen"
+    "reports": "Meldungen",
+    "auditLog": "Verlauf",
+    "noAuditLog": "Keine Aktionseinträge",
+    "auditAll": "Alle",
+    "auditVerified": "Verifiziert",
+    "auditRejected": "Abgelehnt",
+    "auditBanned": "Gesperrt",
+    "auditUnbanned": "Entsperrt",
+    "action_verification_approved": "Verifizierung genehmigt",
+    "action_verification_rejected": "Verifizierung abgelehnt",
+    "action_ban": "Gesperrt",
+    "action_unban": "Entsperrt",
+    "auditBy": "von",
+    "auditMatches": "{{count}} Matches erstellt",
+    "auditRejectionReason": "Grund: {{reason}}"
   },
   "discovery": {
     "title": "Entdecken",
@@ -467,6 +482,8 @@
     "privacyPolicy": "Datenschutzrichtlinie",
     "about": "Über uns",
     "version": "Version",
+    "support": "Hilfe",
+    "contactUs": "Ein Problem? Schreib uns!",
     "blockedUsers": "Blockierte Nutzerinnen",
     "signOut": "Abmelden",
     "signOutConfirm": "Bist du sicher, dass du dich abmelden möchtest?",
@@ -535,7 +552,7 @@
     "redeem": "Einlösen",
     "codeSuccess": "Code eingelöst! Willkommen bei Premium!",
     "invalidCode": "Ungültiger Code. Bitte überprüfe ihn und versuche es erneut.",
-    "completeProfileTeaserDiamond": "Fülle alle mit ◆ markierten Felder aus und erhalte 7 Tage Premium gratis."
+    "completeProfileTeaserDiamond": "Fülle alle mit 💎 markierten Felder aus und erhalte 7 Tage Premium gratis."
   },
   "boost": {
     "title": "Profil-Boost",
@@ -668,7 +685,7 @@
     "approvedMessage": "Dein Profil ist jetzt für andere sichtbar.",
     "verifyNow": "Jetzt verifizieren",
     "verifyLater": "Später",
-    "banner": "Verifiziere deine Identität, damit andere dich sehen können",
+    "banner": "Du bist unsichtbar. Verifiziere deine Identität, damit deine Likes und dein Profil sichtbar werden",
     "bannerPending": "Verifizierung wird überprüft...",
     "cameraPermission": "Kamerazugriff wird für die Verifizierung benötigt",
     "heldLikesInfo": "Deine Likes werden gespeichert! Sobald du verifiziert bist, werden sie sichtbar.",

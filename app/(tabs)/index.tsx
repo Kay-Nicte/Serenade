@@ -28,6 +28,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 
 export default function TodayScreen() {
   const { t } = useTranslation();
@@ -147,6 +148,7 @@ export default function TodayScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
+      <ResponsiveContainer>
       <View style={styles.header}>
         <Text style={styles.title}>{t("today.title")}</Text>
         {pendingLikesCount > 0 && (
@@ -334,6 +336,7 @@ export default function TodayScreen() {
         onChat={handleChat}
         onKeepExploring={handleKeepExploring}
       />
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }

@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useColors } from '@/hooks/useColors';
+import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 import { Fonts } from '@/constants/fonts';
 import { signUp } from '@/lib/auth';
 import { useAuthStore } from '@/stores/authStore';
@@ -82,6 +83,7 @@ export default function RegisterScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ResponsiveContainer>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -173,6 +175,7 @@ export default function RegisterScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      </ResponsiveContainer>
     </SafeAreaView>
   );
 }
