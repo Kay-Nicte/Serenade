@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { ActivityIndicator, Alert, View, StyleSheet } from 'react-native';
 import { Stack, useRouter, useSegments, useGlobalSearchParams } from 'expo-router';
 import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_700Bold_Italic } from '@expo-google-fonts/playfair-display';
 import { DMSans_400Regular, DMSans_500Medium, DMSans_600SemiBold, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
@@ -25,7 +25,7 @@ import { useBoostStore } from '@/stores/boostStore';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { OfflineBanner } from '@/components/OfflineBanner';
 import { Toast } from '@/components/Toast';
-import { useToastStore, showToast } from '@/stores/toastStore';
+import { useToastStore } from '@/stores/toastStore';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { useTranslation } from 'react-i18next';
 import '@/i18n';
@@ -265,17 +265,17 @@ export default function RootLayout() {
         const update = await Updates.checkForUpdateAsync();
         if (update.isAvailable) {
           await Updates.fetchUpdateAsync();
-          // Update will apply automatically on next cold start.
-          // Show a non-intrusive toast so the user can restart when they want.
-          showToast(
-            '✨ Nueva versión lista. ¡Toca para actualizar!',
-            'success',
-            6000,
-            () => Updates.reloadAsync(),
+          Alert.alert(
+            'Actualización lista',
+            'Hay una nueva versión disponible.',
+            [
+              { text: 'Más tarde' },
+              { text: 'Reiniciar ahora', onPress: () => Updates.reloadAsync() },
+            ]
           );
         }
-      } catch {
-        // Silently ignore OTA errors — not critical
+      } catch (e: any) {
+        Alert.alert('OTA error', e?.message ?? String(e));
       }
     })();
   }, []);
@@ -315,7 +315,6 @@ export default function RootLayout() {
             <Stack.Screen name="verify-identity" options={{ presentation: 'modal' }} />
             <Stack.Screen name="admin-verification" />
             <Stack.Screen name="manage-moderators" />
-            <Stack.Screen name="admin-audit-log" />
             <Stack.Screen name="premium" options={{ presentation: 'modal' }} />
             <Stack.Screen name="buy-boost" options={{ presentation: 'modal' }} />
           </Stack>

@@ -151,7 +151,6 @@ export default function PremiumScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
           <Ionicons name="close" size={24} color={Colors.text} />
@@ -266,7 +265,6 @@ export default function PremiumScreen() {
           </View>
         </View>
       </ScrollView>
-      </>
     </SafeAreaView>
   );
 }

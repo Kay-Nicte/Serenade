@@ -89,7 +89,6 @@ export default function VerifyIdentityScreen() {
   if (!permission?.granted && step !== 'instruction') {
     return (
       <SafeAreaView style={styles.container}>
-        <>
         <View style={styles.centered}>
           <Ionicons name="camera-outline" size={64} color={Colors.textTertiary} />
           <Text style={styles.permissionText}>{t('verification.cameraPermission')}</Text>
@@ -97,7 +96,6 @@ export default function VerifyIdentityScreen() {
             <Text style={styles.primaryButtonText}>{t('common.retry')}</Text>
           </TouchableOpacity>
         </View>
-        </>
       </SafeAreaView>
     );
   }
@@ -106,7 +104,6 @@ export default function VerifyIdentityScreen() {
   if (step === 'instruction') {
     return (
       <SafeAreaView style={styles.container}>
-        <>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Ionicons name="close" size={24} color={Colors.text} />
@@ -149,7 +146,6 @@ export default function VerifyIdentityScreen() {
             <Text style={styles.laterText}>{t('verification.verifyLater')}</Text>
           </TouchableOpacity>
         </View>
-        </>
       </SafeAreaView>
     );
   }
@@ -193,7 +189,6 @@ export default function VerifyIdentityScreen() {
   // Step 3: Preview
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleRetake} style={styles.backButton}>
           <Ionicons name="chevron-back" size={24} color={Colors.text} />
@@ -242,7 +237,6 @@ export default function VerifyIdentityScreen() {
           <Text style={styles.secondaryButtonText}>{t('verification.retakePhoto')}</Text>
         </TouchableOpacity>
       </View>
-      </>
     </SafeAreaView>
   );
 }

@@ -147,7 +147,6 @@ export default function TodayScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <>
       <View style={styles.header}>
         <Text style={styles.title}>{t("today.title")}</Text>
         {pendingLikesCount > 0 && (
@@ -335,7 +334,6 @@ export default function TodayScreen() {
         onChat={handleChat}
         onKeepExploring={handleKeepExploring}
       />
-      </>
     </SafeAreaView>
   );
 }

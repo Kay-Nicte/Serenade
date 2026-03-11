@@ -99,7 +99,6 @@ export default function ForgotPasswordScreen() {
   if (step === 'code') {
     return (
       <SafeAreaView style={styles.container}>
-        <>
         <KeyboardAvoidingView
           style={styles.content}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -161,14 +160,12 @@ export default function ForgotPasswordScreen() {
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
-        </>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <KeyboardAvoidingView
         style={styles.content}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -205,7 +202,6 @@ export default function ForgotPasswordScreen() {
           />
         </View>
       </KeyboardAvoidingView>
-      </>
     </SafeAreaView>
   );
 }

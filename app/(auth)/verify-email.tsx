@@ -37,7 +37,6 @@ export default function VerifyEmailScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <View style={styles.content}>
         <View style={styles.iconContainer}>
           <Ionicons name="mail-outline" size={64} color={Colors.primary} />
@@ -61,7 +60,6 @@ export default function VerifyEmailScreen() {
           />
         </View>
       </View>
-      </>
     </SafeAreaView>
   );
 }

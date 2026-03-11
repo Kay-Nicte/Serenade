@@ -261,7 +261,6 @@ export default function DiscoveryPreferencesScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -581,7 +580,6 @@ export default function DiscoveryPreferencesScreen() {
           />
         </ScrollView>
       </KeyboardAvoidingView>
-      </>
     </SafeAreaView>
   );
 }

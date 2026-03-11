@@ -58,21 +58,8 @@ export default function LoginScreen() {
     }
   };
 
-  if (googleLoading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color={Colors.primary} />
-        </View>
-        </>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <KeyboardAvoidingView
         style={styles.content}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -138,12 +125,13 @@ export default function LoginScreen() {
               setGoogleLoading(true);
               try {
                 await signInWithGoogle();
-                // Keep spinner until AuthGuard navigates away
+                // onAuthStateChange handles fetchProfile and AuthGuard handles navigation
               } catch (e: unknown) {
                 const msg = e instanceof Error ? e.message : '';
                 if (!msg.includes('cancelled')) {
                   showToast(t('auth.errorGeneric'), 'error');
                 }
+              } finally {
                 setGoogleLoading(false);
               }
             }}
@@ -161,7 +149,6 @@ export default function LoginScreen() {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-      </>
     </SafeAreaView>
   );
 }

@@ -207,7 +207,6 @@ export default function CompleteProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -503,7 +502,6 @@ export default function CompleteProfileScreen() {
           </View>
         </View>
       </Modal>
-      </>
     </SafeAreaView>
   );
 }

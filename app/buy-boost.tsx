@@ -76,7 +76,6 @@ export default function BuyBoostScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
           <Ionicons name="close" size={24} color={Colors.text} />
@@ -134,7 +133,6 @@ export default function BuyBoostScreen() {
           <ActivityIndicator size="large" color={Colors.primary} style={{ marginTop: 24 }} />
         )}
       </ScrollView>
-      </>
     </SafeAreaView>
   );
 }

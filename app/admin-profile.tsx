@@ -241,11 +241,9 @@ export default function AdminProfileScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
-        <>
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={Colors.primary} />
         </View>
-        </>
       </SafeAreaView>
     );
   }
@@ -253,11 +251,9 @@ export default function AdminProfileScreen() {
   if (!profile) {
     return (
       <SafeAreaView style={styles.container}>
-        <>
         <View style={styles.centered}>
           <Text style={styles.errorText}>{t('common.error')}</Text>
         </View>
-        </>
       </SafeAreaView>
     );
   }
@@ -269,7 +265,6 @@ export default function AdminProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -455,7 +450,6 @@ export default function AdminProfileScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      </>
     </SafeAreaView>
   );
 }

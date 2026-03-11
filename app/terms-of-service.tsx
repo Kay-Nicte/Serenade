@@ -15,7 +15,6 @@ export default function TermsOfServiceScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -30,7 +29,6 @@ export default function TermsOfServiceScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.body}>{t('legal.termsContent')}</Text>
       </ScrollView>
-      </>
     </SafeAreaView>
   );
 }

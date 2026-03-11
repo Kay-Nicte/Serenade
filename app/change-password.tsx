@@ -75,7 +75,6 @@ export default function ChangePasswordScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -130,7 +129,6 @@ export default function ChangePasswordScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      </>
     </SafeAreaView>
   );
 }

@@ -96,18 +96,15 @@ export default function ResetPasswordScreen() {
   if (exchanging) {
     return (
       <SafeAreaView style={styles.container}>
-        <>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <ActivityIndicator size="large" color={Colors.primary} />
         </View>
-        </>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <KeyboardAvoidingView
         style={styles.content}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -143,7 +140,6 @@ export default function ResetPasswordScreen() {
           />
         </View>
       </KeyboardAvoidingView>
-      </>
     </SafeAreaView>
   );
 }

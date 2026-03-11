@@ -11,13 +11,7 @@
     },
     "preview": {
       "distribution": "internal",
-      "channel": "preview",
-      "env": {}
-    },
-    "debug": {
-      "distribution": "internal",
-      "channel": "production",
-      "environment": "production"
+      "channel": "preview"
     },
     "production": {
       "autoIncrement": true,

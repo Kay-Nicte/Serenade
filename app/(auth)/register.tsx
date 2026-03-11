@@ -82,7 +82,6 @@ export default function RegisterScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -174,7 +173,6 @@ export default function RegisterScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      </>
     </SafeAreaView>
   );
 }

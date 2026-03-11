@@ -36,7 +36,6 @@ export default function WelcomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       <View style={styles.content}>
         <View style={styles.hero}>
           <Text style={styles.title}>{t('welcome.title')}</Text>
@@ -77,7 +76,6 @@ export default function WelcomeScreen() {
           </TouchableOpacity>
         </View>
       </View>
-      </>
     </SafeAreaView>
   );
 }

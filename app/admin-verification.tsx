@@ -277,7 +277,6 @@ export default function AdminVerificationScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -323,7 +322,6 @@ export default function AdminVerificationScreen() {
           )}
         </View>
       </Modal>
-      </>
     </SafeAreaView>
   );
 }
