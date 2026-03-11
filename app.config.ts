@@ -4,7 +4,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: 'Serenade',
   slug: 'Serenade',
-  version: '1.0.0',
+  version: '1.0.1',
   orientation: 'default',
   icon: './assets/images/icon.png',
   scheme: 'serenade',
