@@ -322,7 +322,11 @@ export default function DiscoveryPreferencesScreen() {
             <Text style={styles.sectionLabel}>{t('discovery.distance')}</Text>
             <View style={styles.rangeRow}>
               <View style={[styles.rangeField, { flex: 2 }]}>
-                <View style={[styles.rangeInputWrap, !distanceEnabled && styles.inputDisabled]}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => { if (!distanceEnabled) setDistanceEnabled(true); }}
+                  style={[styles.rangeInputWrap, !distanceEnabled && styles.inputDisabled]}
+                >
                   <TextInput
                     style={styles.rangeInput}
                     keyboardType="number-pad"
@@ -336,7 +340,7 @@ export default function DiscoveryPreferencesScreen() {
                     placeholderTextColor={Colors.textTertiary}
                     editable={distanceEnabled}
                   />
-                </View>
+                </TouchableOpacity>
               </View>
               <Text style={styles.rangeSeparator}>km</Text>
             </View>
