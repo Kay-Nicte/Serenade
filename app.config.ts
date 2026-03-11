@@ -13,7 +13,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     bundleIdentifier: 'com.ixabel.serenade',
     supportsTablet: true,
-    googleServicesFile: './GoogleService-Info.plist',
+    googleServicesFile: process.env.GOOGLE_SERVICES_INFOPLIST || './GoogleService-Info.plist',
     infoPlist: {
       NSCameraUsageDescription:
         'Serenade needs access to your camera to take profile photos.',
