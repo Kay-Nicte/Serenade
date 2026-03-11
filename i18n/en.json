@@ -8,7 +8,8 @@
     "next": "Next",
     "back": "Back",
     "done": "Done",
-    "or": "or"
+    "or": "or",
+    "offline": "No internet connection"
   },
   "welcome": {
     "title": "Serena",
@@ -32,7 +33,18 @@
     "errorInvalidEmail": "Invalid email address",
     "errorPasswordShort": "Password must be at least 6 characters",
     "errorPasswordMismatch": "Passwords don't match",
-    "errorGeneric": "Authentication error. Please try again."
+    "errorGeneric": "Authentication error. Please try again.",
+    "forgotPasswordTitle": "Reset password",
+    "forgotPasswordSubtitle": "Enter your email and we'll send you a reset link",
+    "sendResetLink": "Send reset link",
+    "resetLinkSent": "Reset link sent!",
+    "resetLinkSentMessage": "Check your email and click the link to reset your password.",
+    "backToLogin": "Back to sign in",
+    "newPassword": "New password",
+    "newPasswordSubtitle": "Enter your new password below",
+    "updatePassword": "Update password",
+    "passwordUpdated": "Password updated",
+    "passwordUpdatedMessage": "Your password has been updated successfully."
   },
   "profile": {
     "completeTitle": "Complete your profile",
@@ -49,7 +61,10 @@
     "lookingFor": "What are you looking for?",
     "save": "Save profile",
     "signOut": "Sign out",
-    "signOutConfirm": "Are you sure you want to sign out?"
+    "signOutConfirm": "Are you sure you want to sign out?",
+    "primaryPhoto": "Main",
+    "removePhoto": "Remove photo",
+    "removePhotoConfirm": "Are you sure you want to remove this photo?"
   },
   "orientation": {
     "lesbian": "Lesbian",
@@ -76,12 +91,14 @@
     "placeholder": "Discover amazing people near you",
     "like": "Like",
     "pass": "Pass",
-    "loading": "Finding profiles..."
+    "loading": "Finding profiles...",
+    "errorFetching": "Could not load profiles. Try again."
   },
   "matches": {
     "title": "Matches",
     "empty": "No matches yet. Keep exploring!",
-    "placeholder": "Your connections will appear here"
+    "placeholder": "Your connections will appear here",
+    "errorFetching": "Could not load matches. Pull to retry."
   },
   "match": {
     "title": "It's a match!",
@@ -94,6 +111,12 @@
     "empty": "No conversations yet",
     "placeholder": "Write a message...",
     "send": "Send",
-    "noMessages": "No messages yet. Say hello!"
+    "noMessages": "No messages yet. Say hello!",
+    "errorFetching": "Could not load messages.",
+    "errorSending": "Message could not be sent. Try again."
+  },
+  "notifications": {
+    "permissionTitle": "Enable notifications",
+    "permissionMessage": "Get notified about new matches and messages"
   }
 }

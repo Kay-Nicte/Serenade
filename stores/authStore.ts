@@ -5,14 +5,16 @@ import * as auth from '@/lib/auth';
 import { useProfileStore } from './profileStore';
 import { useMatchStore } from './matchStore';
 import { useChatStore } from './chatStore';
+import { usePhotoStore } from './photoStore';
+import type { Orientation, LookingFor } from '@/constants/config';
 
 export interface Profile {
   id: string;
   name: string | null;
   birth_date: string | null;
   bio: string | null;
-  orientation: string | null;
-  looking_for: string | null;
+  orientation: Orientation | null;
+  looking_for: LookingFor | null;
   avatar_url: string | null;
   is_profile_complete: boolean;
   created_at: string;
@@ -99,10 +101,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signOut: async () => {
+    const { removePushTokenFromServer } = await import('@/lib/notifications');
+    await removePushTokenFromServer();
     await auth.signOut();
     useProfileStore.getState().reset();
     useMatchStore.getState().reset();
     useChatStore.getState().reset();
+    usePhotoStore.getState().reset();
     set({
       session: null,
       user: null,

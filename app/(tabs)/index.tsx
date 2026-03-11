@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
@@ -8,6 +9,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useDailyProfiles } from '@/hooks/useDailyProfiles';
 import { ProfileCard } from '@/components/ProfileCard';
 import { MatchOverlay } from '@/components/MatchOverlay';
+import { supabase } from '@/lib/supabase';
+import { getPhotoUrl } from '@/lib/storage';
 
 export default function TodayScreen() {
   const { t } = useTranslation();
@@ -21,6 +24,27 @@ export default function TodayScreen() {
     pass,
     clearMatchResult,
   } = useDailyProfiles();
+
+  const [candidatePhotos, setCandidatePhotos] = useState<{ uri: string }[]>([]);
+
+  useEffect(() => {
+    if (currentProfile) {
+      supabase
+        .from('photos')
+        .select('storage_path, position')
+        .eq('user_id', currentProfile.id)
+        .order('position')
+        .then(({ data }) => {
+          if (data && data.length > 0) {
+            setCandidatePhotos(data.map((p) => ({ uri: getPhotoUrl(p.storage_path) })));
+          } else {
+            setCandidatePhotos([]);
+          }
+        });
+    } else {
+      setCandidatePhotos([]);
+    }
+  }, [currentProfile?.id, currentProfile]);
 
   const handleChat = () => {
     if (matchResult?.match_id) {
@@ -45,7 +69,7 @@ export default function TodayScreen() {
           </View>
         ) : currentProfile && hasMore ? (
           <>
-            <ProfileCard profile={currentProfile} />
+            <ProfileCard profile={currentProfile} photos={candidatePhotos} />
             <View style={styles.actions}>
               <TouchableOpacity
                 style={[styles.actionButton, styles.passButton]}

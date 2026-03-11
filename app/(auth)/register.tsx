@@ -55,8 +55,9 @@ export default function RegisterScreen() {
     try {
       await signUp(email.trim(), password);
       await fetchProfile();
-    } catch (e: any) {
-      Alert.alert(t('common.error'), e?.message ?? t('auth.errorGeneric'));
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : t('auth.errorGeneric');
+      Alert.alert(t('common.error'), message);
     } finally {
       setLoading(false);
     }

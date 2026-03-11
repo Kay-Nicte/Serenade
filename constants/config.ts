@@ -1,3 +1,9 @@
+export const ORIENTATIONS = ['lesbian', 'bisexual', 'pansexual', 'queer', 'other'] as const;
+export const LOOKING_FOR_OPTIONS = ['friendship', 'dating', 'relationship', 'explore'] as const;
+
+export type Orientation = (typeof ORIENTATIONS)[number];
+export type LookingFor = (typeof LOOKING_FOR_OPTIONS)[number];
+
 export const Config = {
   maxPhotos: 6,
   maxBioLength: 500,

@@ -11,6 +11,7 @@ interface ProfileStoreState {
   candidates: Profile[];
   currentIndex: number;
   isLoading: boolean;
+  error: string | null;
   matchResult: MatchResult | null;
 
   fetchCandidates: () => Promise<void>;
@@ -24,10 +25,11 @@ export const useProfileStore = create<ProfileStoreState>((set, get) => ({
   candidates: [],
   currentIndex: 0,
   isLoading: false,
+  error: null,
   matchResult: null,
 
   fetchCandidates: async () => {
-    set({ isLoading: true });
+    set({ isLoading: true, error: null });
     try {
       const { data, error } = await supabase.rpc('get_daily_candidates', {
         candidate_limit: 10,
@@ -38,6 +40,7 @@ export const useProfileStore = create<ProfileStoreState>((set, get) => ({
       set({ candidates: (data as Profile[]) ?? [], currentIndex: 0 });
     } catch (error) {
       console.error('Error fetching candidates:', error);
+      set({ error: 'today.errorFetching' });
     } finally {
       set({ isLoading: false });
     }
@@ -87,6 +90,7 @@ export const useProfileStore = create<ProfileStoreState>((set, get) => ({
       candidates: [],
       currentIndex: 0,
       isLoading: false,
+      error: null,
       matchResult: null,
     }),
 }));

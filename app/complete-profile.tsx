@@ -4,8 +4,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
-  Image,
   Alert,
   Platform,
   KeyboardAvoidingView,
@@ -16,21 +14,21 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Tag } from '@/components/ui/Tag';
+import { PhotoGrid } from '@/components/PhotoGrid';
 import { Colors } from '@/constants/colors';
 import { Fonts } from '@/constants/fonts';
-import { Config } from '@/constants/config';
+import { Config, ORIENTATIONS, LOOKING_FOR_OPTIONS, type Orientation, type LookingFor } from '@/constants/config';
 import { useAuthStore } from '@/stores/authStore';
-import { pickImage, uploadPhoto, getPhotoUrl } from '@/lib/storage';
-import { Ionicons } from '@expo/vector-icons';
+import { usePhotoStore, type Photo } from '@/stores/photoStore';
+import { pickImage } from '@/lib/storage';
 
-const ORIENTATIONS = ['lesbian', 'bisexual', 'pansexual', 'queer', 'other'] as const;
-const LOOKING_FOR = ['friendship', 'dating', 'relationship', 'explore'] as const;
+const LOOKING_FOR = LOOKING_FOR_OPTIONS;
 
 export default function CompleteProfileScreen() {
   const { t } = useTranslation();
   const { user, updateProfile } = useAuthStore();
+  const { photos, addPhoto, removePhoto } = usePhotoStore();
 
-  const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
@@ -45,9 +43,15 @@ export default function CompleteProfileScreen() {
       ? `${year.padStart(4, '0')}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
       : null;
 
-  const handlePickPhoto = async () => {
+  const handleAddPhoto = async (position: number) => {
     const uri = await pickImage();
-    if (uri) setPhotoUri(uri);
+    if (uri && user) {
+      await addPhoto(user.id, uri, position);
+    }
+  };
+
+  const handleRemovePhoto = async (photo: Photo) => {
+    await removePhoto(photo);
   };
 
   const handleSave = async () => {
@@ -58,20 +62,12 @@ export default function CompleteProfileScreen() {
 
     setLoading(true);
     try {
-      let avatarUrl: string | null = null;
-
-      if (photoUri && user) {
-        const path = await uploadPhoto(user.id, photoUri, 0);
-        avatarUrl = getPhotoUrl(path);
-      }
-
       await updateProfile({
         name: name.trim(),
         birth_date: birthDateString,
         bio: bio.trim() || null,
-        orientation: orientation as 'lesbian' | 'bisexual' | 'pansexual' | 'queer' | 'other',
-        looking_for: lookingFor as 'friendship' | 'dating' | 'relationship' | 'explore',
-        avatar_url: avatarUrl,
+        orientation: orientation as Orientation,
+        looking_for: lookingFor as LookingFor,
         is_profile_complete: true,
       });
     } catch {
@@ -96,17 +92,13 @@ export default function CompleteProfileScreen() {
           <Text style={styles.title}>{t('profile.completeTitle')}</Text>
           <Text style={styles.subtitle}>{t('profile.completeSubtitle')}</Text>
 
-          {/* Photo */}
-          <TouchableOpacity style={styles.photoContainer} onPress={handlePickPhoto}>
-            {photoUri ? (
-              <Image source={{ uri: photoUri }} style={styles.photo} />
-            ) : (
-              <View style={styles.photoPlaceholder}>
-                <Ionicons name="camera-outline" size={32} color={Colors.primary} />
-                <Text style={styles.photoText}>{t('profile.addPhoto')}</Text>
-              </View>
-            )}
-          </TouchableOpacity>
+          {/* Photos */}
+          <PhotoGrid
+            photos={photos}
+            onAdd={handleAddPhoto}
+            onRemove={handleRemovePhoto}
+            editable
+          />
 
           {/* Name */}
           <Input
@@ -237,34 +229,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.body,
     color: Colors.textSecondary,
     lineHeight: 22,
-  },
-  photoContainer: {
-    width: 120,
-    height: 160,
-    borderRadius: 20,
-    overflow: 'hidden',
-    alignSelf: 'center',
-  },
-  photo: {
-    width: '100%',
-    height: '100%',
-  },
-  photoPlaceholder: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: Colors.surfaceSecondary,
-    borderWidth: 2,
-    borderColor: Colors.border,
-    borderStyle: 'dashed',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 8,
-  },
-  photoText: {
-    fontSize: 12,
-    fontFamily: Fonts.bodyMedium,
-    color: Colors.primary,
   },
   dateRow: {
     flexDirection: 'row',

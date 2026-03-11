@@ -70,7 +70,7 @@ export default function ChatScreen() {
     if (messages.length > 0) {
       markAsRead();
     }
-  }, [messages.length]);
+  }, [messages.length, markAsRead]);
 
   const handleSend = async (content: string) => {
     await sendMessage(content);

@@ -7,6 +7,10 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/hooks/useAuth';
+import { useNetworkStatus } from '@/hooks/useNetworkStatus';
+import { useNotifications } from '@/hooks/useNotifications';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { OfflineBanner } from '@/components/OfflineBanner';
 import '@/i18n';
 
 SplashScreen.preventAutoHideAsync();
@@ -16,6 +20,8 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   const segments = useSegments();
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
+
+  useNotifications();
 
   useEffect(() => {
     if (isLoading) return;
@@ -35,7 +41,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     } else if (isAuthenticated && isProfileComplete && (inAuthGroup || inCompleteProfile)) {
       router.replace('/(tabs)');
     }
-  }, [isLoading, isAuthenticated, isProfileComplete, segments, isReady]);
+  }, [isLoading, isAuthenticated, isProfileComplete, segments, isReady, router]);
 
   if (isLoading) {
     return (
@@ -64,17 +70,23 @@ export default function RootLayout() {
     }
   }, [fontsLoaded]);
 
+  const { isConnected } = useNetworkStatus();
+
   if (!fontsLoaded) return null;
 
   return (
-    <AuthGuard>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="complete-profile" />
-        <Stack.Screen name="(tabs)" />
-      </Stack>
-      <StatusBar style="dark" />
-    </AuthGuard>
+    <ErrorBoundary>
+      {!isConnected && <OfflineBanner />}
+      <AuthGuard>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="complete-profile" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="reset-password" />
+        </Stack>
+        <StatusBar style="dark" />
+      </AuthGuard>
+    </ErrorBoundary>
   );
 }
 

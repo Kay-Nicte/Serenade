@@ -8,7 +8,8 @@
     "next": "Siguiente",
     "back": "Volver",
     "done": "Listo",
-    "or": "o"
+    "or": "o",
+    "offline": "Sin conexión a internet"
   },
   "welcome": {
     "title": "Serena",
@@ -32,7 +33,18 @@
     "errorInvalidEmail": "Correo electrónico inválido",
     "errorPasswordShort": "La contraseña debe tener al menos 6 caracteres",
     "errorPasswordMismatch": "Las contraseñas no coinciden",
-    "errorGeneric": "Error de autenticación. Inténtalo de nuevo."
+    "errorGeneric": "Error de autenticación. Inténtalo de nuevo.",
+    "forgotPasswordTitle": "Recuperar contraseña",
+    "forgotPasswordSubtitle": "Introduce tu correo y te enviaremos un enlace para restablecer tu contraseña",
+    "sendResetLink": "Enviar enlace",
+    "resetLinkSent": "¡Enlace enviado!",
+    "resetLinkSentMessage": "Revisa tu correo y haz clic en el enlace para restablecer tu contraseña.",
+    "backToLogin": "Volver a iniciar sesión",
+    "newPassword": "Nueva contraseña",
+    "newPasswordSubtitle": "Introduce tu nueva contraseña",
+    "updatePassword": "Actualizar contraseña",
+    "passwordUpdated": "Contraseña actualizada",
+    "passwordUpdatedMessage": "Tu contraseña se ha actualizado correctamente."
   },
   "profile": {
     "completeTitle": "Completa tu perfil",
@@ -49,7 +61,10 @@
     "lookingFor": "¿Qué buscas?",
     "save": "Guardar perfil",
     "signOut": "Cerrar sesión",
-    "signOutConfirm": "¿Estás segura de que quieres cerrar sesión?"
+    "signOutConfirm": "¿Estás segura de que quieres cerrar sesión?",
+    "primaryPhoto": "Principal",
+    "removePhoto": "Eliminar foto",
+    "removePhotoConfirm": "¿Estás segura de que quieres eliminar esta foto?"
   },
   "orientation": {
     "lesbian": "Lesbiana",
@@ -76,12 +91,14 @@
     "placeholder": "Descubre personas increíbles cerca de ti",
     "like": "Me gusta",
     "pass": "Pasar",
-    "loading": "Buscando perfiles..."
+    "loading": "Buscando perfiles...",
+    "errorFetching": "No se pudieron cargar los perfiles. Inténtalo de nuevo."
   },
   "matches": {
     "title": "Matches",
     "empty": "Aún no tienes matches. ¡Sigue explorando!",
-    "placeholder": "Tus conexiones aparecerán aquí"
+    "placeholder": "Tus conexiones aparecerán aquí",
+    "errorFetching": "No se pudieron cargar los matches. Desliza para reintentar."
   },
   "match": {
     "title": "¡Es un match!",
@@ -94,6 +111,12 @@
     "empty": "No tienes conversaciones aún",
     "placeholder": "Escribe un mensaje...",
     "send": "Enviar",
-    "noMessages": "Aún no hay mensajes. ¡Di hola!"
+    "noMessages": "Aún no hay mensajes. ¡Di hola!",
+    "errorFetching": "No se pudieron cargar los mensajes.",
+    "errorSending": "No se pudo enviar el mensaje. Inténtalo de nuevo."
+  },
+  "notifications": {
+    "permissionTitle": "Activar notificaciones",
+    "permissionMessage": "Recibe notificaciones sobre nuevos matches y mensajes"
   }
 }

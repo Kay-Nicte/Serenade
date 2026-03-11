@@ -15,6 +15,7 @@ interface ChatStoreState {
   messages: Message[];
   activeMatchId: string | null;
   isLoading: boolean;
+  error: string | null;
   subscription: RealtimeChannel | null;
 
   fetchMessages: (matchId: string) => Promise<void>;
@@ -29,10 +30,11 @@ export const useChatStore = create<ChatStoreState>((set, get) => ({
   messages: [],
   activeMatchId: null,
   isLoading: false,
+  error: null,
   subscription: null,
 
   fetchMessages: async (matchId: string) => {
-    set({ isLoading: true, activeMatchId: matchId });
+    set({ isLoading: true, error: null, activeMatchId: matchId });
     try {
       const { data, error } = await supabase
         .from('messages')
@@ -45,6 +47,7 @@ export const useChatStore = create<ChatStoreState>((set, get) => ({
       set({ messages: (data as Message[]) ?? [] });
     } catch (error) {
       console.error('Error fetching messages:', error);
+      set({ error: 'chat.errorFetching' });
     } finally {
       set({ isLoading: false });
     }
@@ -64,6 +67,7 @@ export const useChatStore = create<ChatStoreState>((set, get) => ({
       if (error) throw error;
     } catch (error) {
       console.error('Error sending message:', error);
+      set({ error: 'chat.errorSending' });
     }
   },
 
@@ -125,6 +129,7 @@ export const useChatStore = create<ChatStoreState>((set, get) => ({
       messages: [],
       activeMatchId: null,
       isLoading: false,
+      error: null,
       subscription: null,
     });
   },

@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '@/constants/colors';
 import { Fonts } from '@/constants/fonts';
-import { Ionicons } from '@expo/vector-icons';
+import { PhotoCarousel } from '@/components/PhotoCarousel';
 import type { Profile } from '@/stores/authStore';
 
 interface ProfileCardProps {
   profile: Profile;
+  photos?: { uri: string }[];
 }
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -25,24 +25,17 @@ function calculateAge(birthDate: string | null): number | null {
   return age;
 }
 
-export function ProfileCard({ profile }: ProfileCardProps) {
+export function ProfileCard({ profile, photos }: ProfileCardProps) {
   const { t } = useTranslation();
   const age = calculateAge(profile.birth_date);
 
   return (
     <View style={styles.card}>
-      {profile.avatar_url ? (
-        <Image
-          source={{ uri: profile.avatar_url }}
-          style={styles.photo}
-          contentFit="cover"
-          transition={200}
-        />
-      ) : (
-        <View style={[styles.photo, styles.photoPlaceholder]}>
-          <Ionicons name="person" size={80} color={Colors.primaryLight} />
-        </View>
-      )}
+      <PhotoCarousel
+        photos={photos ?? []}
+        fallbackUri={profile.avatar_url}
+        width={CARD_WIDTH}
+      />
 
       <View style={styles.info}>
         <View style={styles.nameRow}>

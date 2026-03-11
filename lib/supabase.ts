@@ -1,8 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 import { openDatabaseSync } from 'expo-sqlite';
+import Constants from 'expo-constants';
 
-const supabaseUrl = 'https://twhyijzjnhqgrdhrjdat.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3aHlpanpqbmhxZ3JkaHJqZGF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4MDUwMDcsImV4cCI6MjA4NzM4MTAwN30.Q_Xza3WiA-isiTM2fzq3CGlhLFyskISoqdKi6sDe9hQ';
+const supabaseUrl = Constants.expoConfig?.extra?.supabaseUrl as string;
+const supabaseAnonKey = Constants.expoConfig?.extra?.supabaseAnonKey as string;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Missing Supabase environment variables. Copy .env.example to .env and fill in the values.'
+  );
+}
 
 class SupabaseStorage {
   private db = openDatabaseSync('supabase-auth');

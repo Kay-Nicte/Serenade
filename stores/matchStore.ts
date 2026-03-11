@@ -16,9 +16,19 @@ export interface Match {
   created_at: string;
 }
 
+interface MatchQueryRow {
+  id: string;
+  user_a_id: string;
+  user_b_id: string;
+  created_at: string;
+  user_a: MatchUser | MatchUser[] | null;
+  user_b: MatchUser | MatchUser[] | null;
+}
+
 interface MatchStoreState {
   matches: Match[];
   isLoading: boolean;
+  error: string | null;
 
   fetchMatches: () => Promise<void>;
   reset: () => void;
@@ -27,9 +37,10 @@ interface MatchStoreState {
 export const useMatchStore = create<MatchStoreState>((set) => ({
   matches: [],
   isLoading: false,
+  error: null,
 
   fetchMatches: async () => {
-    set({ isLoading: true });
+    set({ isLoading: true, error: null });
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -50,11 +61,12 @@ export const useMatchStore = create<MatchStoreState>((set) => ({
       if (error) throw error;
 
       const matches: Match[] = await Promise.all(
-        (matchesData ?? []).map(async (match: any) => {
-          const otherUser: MatchUser =
-            match.user_a_id === user.id
-              ? match.user_b
-              : match.user_a;
+        (matchesData ?? []).map(async (match: MatchQueryRow) => {
+          const rawOther =
+            match.user_a_id === user.id ? match.user_b : match.user_a;
+          const otherUser: MatchUser = Array.isArray(rawOther)
+            ? rawOther[0] ?? { id: '', name: null, avatar_url: null }
+            : rawOther ?? { id: '', name: null, avatar_url: null };
 
           // Get last message
           const { data: lastMsg } = await supabase
@@ -94,10 +106,11 @@ export const useMatchStore = create<MatchStoreState>((set) => ({
       set({ matches });
     } catch (error) {
       console.error('Error fetching matches:', error);
+      set({ error: 'matches.errorFetching' });
     } finally {
       set({ isLoading: false });
     }
   },
 
-  reset: () => set({ matches: [], isLoading: false }),
+  reset: () => set({ matches: [], isLoading: false, error: null }),
 }));
