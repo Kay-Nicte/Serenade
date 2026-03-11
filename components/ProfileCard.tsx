@@ -121,7 +121,7 @@ export function ProfileCard({ profile, photos, activityLevel, lastSeen, showActi
           fallbackUri={profile.avatar_url}
           width={CARD_WIDTH}
         />
-        {compatibility !== null && compatibility >= 30 && (
+        {compatibility !== null && compatibility > 0 && (
           <View style={styles.compatBadge}>
             <Ionicons name="heart" size={12} color={Colors.primary} />
             <Text style={styles.compatText}>{compatibility}%</Text>
