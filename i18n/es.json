@@ -57,6 +57,7 @@
     "verifyEmailResentMessage": "Hemos enviado un nuevo enlace de verificación a tu correo.",
     "or": "o",
     "continueWithGoogle": "Continuar con Google",
+    "continueWithApple": "Continuar con Apple",
     "emailVerified": "¡Email verificado!",
     "errorEmailAlreadyExists": "Ya existe una cuenta con este correo electrónico"
   },

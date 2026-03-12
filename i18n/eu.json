@@ -57,6 +57,7 @@
     "verifyEmailResentMessage": "Egiaztapen esteka berri bat bidali dugu zure postara.",
     "or": "edo",
     "continueWithGoogle": "Google-rekin jarraitu",
+    "continueWithApple": "Apple-rekin jarraitu",
     "emailVerified": "Emaila egiaztatuta!",
     "errorEmailAlreadyExists": "Email honekin kontu bat dagoeneko existitzen da"
   },

@@ -1,6 +1,8 @@
 import { supabase } from './supabase';
 import * as WebBrowser from 'expo-web-browser';
 import { makeRedirectUri } from 'expo-auth-session';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import { Platform } from 'react-native';
 
 export async function signUp(email: string, password: string) {
   const { data, error } = await supabase.auth.signUp({ email, password });
@@ -143,6 +145,30 @@ export async function signInWithGoogle() {
   }
 
   throw new Error('Google sign-in was cancelled');
+}
+
+export async function signInWithApple() {
+  const credential = await AppleAuthentication.signInAsync({
+    requestedScopes: [
+      AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+      AppleAuthentication.AppleAuthenticationScope.EMAIL,
+    ],
+  });
+
+  if (!credential.identityToken) {
+    throw new Error('No identity token returned from Apple');
+  }
+
+  const { error } = await supabase.auth.signInWithIdToken({
+    provider: 'apple',
+    token: credential.identityToken,
+  });
+
+  if (error) throw error;
+}
+
+export function isAppleAuthAvailable(): boolean {
+  return Platform.OS === 'ios';
 }
 
 export async function sendPasswordResetEmail(email: string) {
