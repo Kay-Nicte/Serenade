@@ -8,6 +8,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { LocationInput } from '@/components/LocationInput';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -22,12 +24,6 @@ import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 type Category = 'viajes' | 'ocio' | 'cultura';
 
-const CATEGORIES: { key: Category; label: string }[] = [
-  { key: 'viajes', label: 'Viajes' },
-  { key: 'ocio', label: 'Ocio' },
-  { key: 'cultura', label: 'Cultura' },
-];
-
 export default function CreatePlanScreen() {
   const { t } = useTranslation();
   const Colors = useColors();
@@ -35,11 +31,22 @@ export default function CreatePlanScreen() {
   const router = useRouter();
   const createPlan = usePlansStore((s) => s.createPlan);
 
+  const CATEGORIES: { key: Category; labelKey: string }[] = [
+    { key: 'viajes', labelKey: 'plans.categoryTravel' },
+    { key: 'ocio', labelKey: 'plans.categoryLeisure' },
+    { key: 'cultura', labelKey: 'plans.categoryCulture' },
+  ];
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [locationName, setLocationName] = useState('');
+  const [locationLat, setLocationLat] = useState<number | undefined>();
+  const [locationLng, setLocationLng] = useState<number | undefined>();
   const [category, setCategory] = useState<Category>('ocio');
-  const [date, setDate] = useState('');
+  const [eventDate, setEventDate] = useState(new Date());
+  const [dateSelected, setDateSelected] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [maxAttendees, setMaxAttendees] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -49,9 +56,54 @@ export default function CreatePlanScreen() {
     return Colors.primaryDark;
   };
 
+  const handleDateChange = (_event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowDatePicker(false);
+    if (selectedDate) {
+      setEventDate(selectedDate);
+      setDateSelected(true);
+      // Show time picker after date is selected
+      setTimeout(() => setShowTimePicker(true), 300);
+    }
+  };
+
+  const handleTimeChange = (_event: DateTimePickerEvent, selectedTime?: Date) => {
+    setShowTimePicker(false);
+    if (selectedTime) {
+      const combined = new Date(eventDate);
+      combined.setHours(selectedTime.getHours(), selectedTime.getMinutes());
+      setEventDate(combined);
+    }
+  };
+
+  const formatDate = (d: Date) => {
+    return d.toLocaleDateString('es-ES', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+
+  const formatTime = (d: Date) => {
+    return d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  };
+
   const handleSubmit = async () => {
-    if (!title.trim() || !locationName.trim() || !date.trim()) {
-      showToast('Rellena los campos obligatorios', 'error');
+    if (!title.trim()) {
+      showToast(t('plans.titleLabel') + ' *', 'error');
+      return;
+    }
+    if (!locationName.trim()) {
+      showToast(t('plans.locationLabel') + ' *', 'error');
+      return;
+    }
+    if (!dateSelected) {
+      showToast(t('plans.dateLabel') + ' *', 'error');
+      return;
+    }
+
+    if (!locationLat || !locationLng) {
+      showToast(t('plans.locationLabel') + ' — selecciona de la lista', 'error');
       return;
     }
 
@@ -62,16 +114,20 @@ export default function CreatePlanScreen() {
         description: description.trim() || null,
         category,
         location_name: locationName.trim(),
-        event_date: date,
+        latitude: locationLat,
+        longitude: locationLng,
+        event_date: eventDate.toISOString(),
         max_attendees: maxAttendees ? parseInt(maxAttendees, 10) : null,
       });
 
       if (result.success) {
-        showToast('Plan creado', 'success');
+        showToast(t('plans.planCreated'), 'success');
         router.back();
       } else {
-        showToast('Error al crear el plan', 'error');
+        showToast(t('plans.errorCreating'), 'error');
       }
+    } catch {
+      showToast(t('plans.errorCreating'), 'error');
     } finally {
       setLoading(false);
     }
@@ -88,7 +144,7 @@ export default function CreatePlanScreen() {
             <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7} hitSlop={8}>
               <Ionicons name="chevron-back" size={26} color={Colors.text} />
             </TouchableOpacity>
-            <Text style={styles.title}>Crear plan</Text>
+            <Text style={styles.headerTitle}>{t('plans.create')}</Text>
             <View style={{ width: 26 }} />
           </View>
 
@@ -98,29 +154,34 @@ export default function CreatePlanScreen() {
             keyboardShouldPersistTaps="handled"
           >
             <Input
-              label="T\u00EDtulo *"
-              placeholder="Ej: Ruta por los Pirineos"
+              label={t('plans.titleLabel') + ' *'}
+              placeholder={t('plans.titlePlaceholder')}
               value={title}
               onChangeText={setTitle}
             />
 
             <Input
-              label="Descripci\u00F3n"
-              placeholder="Cu\u00E9ntanos m\u00E1s sobre el plan..."
+              label={t('plans.descriptionLabel')}
+              placeholder={t('plans.descriptionPlaceholder')}
               value={description}
               onChangeText={setDescription}
               multiline
             />
 
-            <Input
-              label="Ubicaci\u00F3n *"
-              placeholder="Ej: Barcelona, Espa\u00F1a"
+            <LocationInput
+              label={t('plans.locationLabel') + ' *'}
+              placeholder={t('plans.locationPlaceholder')}
               value={locationName}
-              onChangeText={setLocationName}
+              onSelect={(loc) => {
+                setLocationName(loc.name);
+                setLocationLat(loc.latitude);
+                setLocationLng(loc.longitude);
+              }}
             />
 
+            {/* Category selector */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Categor\u00EDa</Text>
+              <Text style={styles.label}>{t('plans.categoryLabel')}</Text>
               <View style={styles.categoryRow}>
                 {CATEGORIES.map((cat) => (
                   <TouchableOpacity
@@ -141,33 +202,59 @@ export default function CreatePlanScreen() {
                         category === cat.key && styles.categoryButtonTextSelected,
                       ]}
                     >
-                      {cat.label}
+                      {t(cat.labelKey)}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
 
-            <Input
-              label="Fecha *"
-              placeholder="AAAA-MM-DD"
-              value={date}
-              onChangeText={setDate}
-            />
+            {/* Date picker */}
+            <View style={styles.fieldGroup}>
+              <Text style={styles.label}>{t('plans.dateLabel')} *</Text>
+              <TouchableOpacity
+                style={styles.dateButton}
+                onPress={() => setShowDatePicker(true)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="calendar-outline" size={20} color={Colors.primary} />
+                <Text style={[styles.dateText, !dateSelected && { color: Colors.textTertiary }]}>
+                  {dateSelected
+                    ? `${formatDate(eventDate)} — ${formatTime(eventDate)}`
+                    : t('plans.dateLabel')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {showDatePicker && (
+              <DateTimePicker
+                value={eventDate}
+                mode="date"
+                minimumDate={new Date()}
+                onChange={handleDateChange}
+              />
+            )}
+
+            {showTimePicker && (
+              <DateTimePicker
+                value={eventDate}
+                mode="time"
+                onChange={handleTimeChange}
+              />
+            )}
 
             <Input
-              label="M\u00E1ximo de asistentes (opcional)"
-              placeholder="Ej: 10"
+              label={t('plans.maxAttendeesLabel')}
+              placeholder={t('plans.maxAttendeesPlaceholder')}
               value={maxAttendees}
               onChangeText={setMaxAttendees}
               keyboardType="number-pad"
             />
 
             <Button
-              title="Crear plan"
+              title={t('plans.create')}
               onPress={handleSubmit}
               loading={loading}
-              disabled={!title.trim() || !locationName.trim() || !date.trim()}
               style={{ marginTop: 8 }}
             />
           </ScrollView>
@@ -191,7 +278,7 @@ function makeStyles(c: ReturnType<typeof useColors>) {
       paddingTop: 12,
       paddingBottom: 8,
     },
-    title: {
+    headerTitle: {
       fontSize: 20,
       fontFamily: Fonts.heading,
       color: c.text,
@@ -230,6 +317,23 @@ function makeStyles(c: ReturnType<typeof useColors>) {
     },
     categoryButtonTextSelected: {
       color: '#FFFFFF',
+    },
+    dateButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      minHeight: 52,
+      borderRadius: 16,
+      borderWidth: 1.5,
+      borderColor: c.border,
+      paddingHorizontal: 16,
+      backgroundColor: c.surface,
+    },
+    dateText: {
+      fontSize: 16,
+      fontFamily: Fonts.body,
+      color: c.text,
+      flex: 1,
     },
   });
 }

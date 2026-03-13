@@ -783,11 +783,18 @@
     "planDeleted": "Plan deleted",
     "errorCreating": "Could not create the plan",
     "errorJoining": "Could not join the plan",
+    "mustVerify": "Verify your profile to join plans",
+    "planFull": "This plan is full",
     "errorLeaving": "Could not leave the plan",
     "deleteConfirm": "Delete this plan?",
     "yourPlan": "Your plan",
     "when": "When",
     "where": "Where",
-    "delete": "Delete"
+    "delete": "Delete",
+    "edit": "Edit plan",
+    "kick": "Remove",
+    "kicked": "Removed from plan",
+    "kickConfirmTitle": "Remove",
+    "kickConfirm": "Remove {{name}} from the plan?"
   }
 }

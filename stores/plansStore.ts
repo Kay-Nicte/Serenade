@@ -63,9 +63,12 @@ export const usePlansStore = create<PlansState>((set, get) => ({
       if (category === 'cerca') {
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status === 'granted') {
-          const position = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.Balanced,
-          });
+          let position = await Location.getLastKnownPositionAsync();
+          if (!position) {
+            position = await Location.getCurrentPositionAsync({
+              accuracy: Location.Accuracy.Low,
+            });
+          }
           lat = position.coords.latitude;
           lng = position.coords.longitude;
         }
@@ -76,8 +79,8 @@ export const usePlansStore = create<PlansState>((set, get) => ({
         params.p_category = category;
       }
       if (lat !== undefined && lng !== undefined) {
-        params.p_lat = lat;
-        params.p_lng = lng;
+        params.p_near_lat = lat;
+        params.p_near_lng = lng;
       }
 
       const { data, error } = await supabase.rpc('get_plans', params);
@@ -106,7 +109,8 @@ export const usePlansStore = create<PlansState>((set, get) => ({
       return { success: true };
     } catch (e) {
       reportError(e, { source: 'plansStore.joinPlan' });
-      return { success: false, error: (e as Error).message };
+      const msg = (e as any)?.message ?? (e as Error).message ?? '';
+      return { success: false, error: msg };
     }
   },
 
@@ -131,17 +135,28 @@ export const usePlansStore = create<PlansState>((set, get) => ({
 
   createPlan: async (data: CreatePlanData) => {
     try {
-      const { error } = await supabase.from('plans').insert({
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error('Not authenticated');
+
+      const insertData: Record<string, unknown> = {
+        creator_id: userData.user.id,
         title: data.title,
         description: data.description ?? null,
         category: data.category,
         location_name: data.location_name,
-        latitude: data.latitude ?? null,
-        longitude: data.longitude ?? null,
         event_date: data.event_date,
         max_attendees: data.max_attendees ?? null,
-      });
-      if (error) throw error;
+      };
+
+      if (data.latitude != null && data.longitude != null) {
+        insertData.location = `POINT(${data.longitude} ${data.latitude})`;
+      }
+
+      const { error } = await supabase.from('plans').insert(insertData);
+      if (error) {
+        console.error('[Plans] Create error:', JSON.stringify(error));
+        throw error;
+      }
 
       await get().fetchPlans();
       return { success: true };
@@ -153,11 +168,11 @@ export const usePlansStore = create<PlansState>((set, get) => ({
 
   deletePlan: async (planId: string) => {
     try {
-      const { error } = await supabase
-        .from('plans')
-        .update({ is_active: false })
-        .eq('id', planId);
-      if (error) throw error;
+      const { error } = await supabase.rpc('delete_plan', { p_plan_id: planId });
+      if (error) {
+        console.error('[Plans] Delete error:', JSON.stringify(error));
+        throw error;
+      }
 
       await get().fetchPlans();
       return { success: true };

@@ -783,11 +783,18 @@
     "planDeleted": "Pla eliminat",
     "errorCreating": "No s'ha pogut crear el pla",
     "errorJoining": "No s'ha pogut unir al pla",
+    "mustVerify": "Verifica el teu perfil per unir-te a plans",
+    "planFull": "Aquest pla està complet",
     "errorLeaving": "No s'ha pogut sortir del pla",
     "deleteConfirm": "Eliminar aquest pla?",
     "yourPlan": "El teu pla",
     "when": "Quan",
     "where": "On",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "edit": "Editar pla",
+    "kick": "Expulsar",
+    "kicked": "Expulsada del pla",
+    "kickConfirmTitle": "Expulsar",
+    "kickConfirm": "Expulsar {{name}} del pla?"
   }
 }

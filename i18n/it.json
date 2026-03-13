@@ -783,11 +783,18 @@
     "planDeleted": "Piano eliminato",
     "errorCreating": "Impossibile creare il piano",
     "errorJoining": "Impossibile unirsi al piano",
+    "mustVerify": "Verifica il tuo profilo per unirti ai piani",
+    "planFull": "Questo piano è completo",
     "errorLeaving": "Impossibile uscire dal piano",
     "deleteConfirm": "Eliminare questo piano?",
     "yourPlan": "Il tuo piano",
     "when": "Quando",
     "where": "Dove",
-    "delete": "Elimina"
+    "delete": "Elimina",
+    "edit": "Modifica piano",
+    "kick": "Rimuovi",
+    "kicked": "Rimossa dal piano",
+    "kickConfirmTitle": "Rimuovi",
+    "kickConfirm": "Rimuovere {{name}} dal piano?"
   }
 }

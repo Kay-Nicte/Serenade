@@ -783,11 +783,18 @@
     "planDeleted": "Plan gelöscht",
     "errorCreating": "Plan konnte nicht erstellt werden",
     "errorJoining": "Beitritt zum Plan nicht möglich",
+    "mustVerify": "Verifiziere dein Profil, um Plänen beizutreten",
+    "planFull": "Dieser Plan ist voll",
     "errorLeaving": "Verlassen des Plans nicht möglich",
     "deleteConfirm": "Diesen Plan löschen?",
     "yourPlan": "Dein Plan",
     "when": "Wann",
     "where": "Wo",
-    "delete": "Löschen"
+    "delete": "Löschen",
+    "edit": "Plan bearbeiten",
+    "kick": "Entfernen",
+    "kicked": "Vom Plan entfernt",
+    "kickConfirmTitle": "Entfernen",
+    "kickConfirm": "{{name}} aus dem Plan entfernen?"
   }
 }

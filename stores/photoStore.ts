@@ -107,32 +107,31 @@ export const usePhotoStore = create<PhotoStoreState>((set, get) => ({
 
   reorderPhotos: async (userId: string, orderedPhotos: Photo[]) => {
     const previous = get().photos;
+
     try {
-      // Optimistic update
-      const updated = orderedPhotos.map((p, i) => ({ ...p, position: i }));
-      set({ photos: updated });
+      const photoIds = orderedPhotos.map((p) => p.id);
+      const positions = orderedPhotos.map((_, i) => i);
 
-      // Update positions in DB
-      for (const photo of updated) {
-        await supabase
-          .from('photos')
-          .update({ position: photo.position })
-          .eq('id', photo.id);
-      }
+      const { error } = await supabase.rpc('reorder_photos', {
+        p_photo_ids: photoIds,
+        p_positions: positions,
+      });
+      if (error) throw error;
 
-      // Update avatar_url to the new position 0 photo
-      const newFirst = updated.find((p) => p.position === 0);
+      // Update avatar_url
+      const newFirst = orderedPhotos[0];
       if (newFirst) {
         await supabase
           .from('profiles')
           .update({ avatar_url: getPhotoUrl(newFirst.storage_path) })
           .eq('id', userId);
       }
+
+      // Re-fetch to ensure consistency with DB
+      await get().fetchPhotos(userId);
     } catch (error) {
-      // Rollback on error
       set({ photos: previous });
       reportError(error, { source: 'photoStore.reorderPhotos' });
-      throw error;
     }
   },
 

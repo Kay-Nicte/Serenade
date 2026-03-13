@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, PanResponder } from 'react-native';
+import { useCallback, useRef, useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { showConfirm } from '@/components/ConfirmDialog';
 import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,8 @@ import { Fonts } from '@/constants/fonts';
 import { Config } from '@/constants/config';
 import { getPhotoUrl } from '@/lib/storage';
 import { useResponsive } from '@/hooks/useResponsive';
+import Sortable from 'react-native-sortables';
+import type { SortableGridRenderItem } from 'react-native-sortables';
 import type { Photo } from '@/stores/photoStore';
 
 interface PhotoGridProps {
@@ -27,83 +29,22 @@ export function PhotoGrid({ photos, onAdd, onRemove, onReorder, editable = true 
   const { width: screenWidth, isTablet, contentMaxWidth } = useResponsive();
   const effectiveWidth = isTablet ? Math.min(screenWidth, contentMaxWidth) : screenWidth;
   const containerPadding = 32 * 2;
-  const itemWidth = (effectiveWidth - containerPadding - GRID_GAP * (GRID_COLUMNS - 1)) / GRID_COLUMNS;
+  const totalWidth = effectiveWidth - containerPadding;
+  const itemWidth = (totalWidth - GRID_GAP * (GRID_COLUMNS - 1)) / GRID_COLUMNS;
   const itemHeight = itemWidth * (4 / 3);
   const Colors = useColors();
   const styles = makeStyles(Colors);
 
-  const [draggingIndex, setDraggingIndex] = useState<number | null>(null);
-  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
-  const dragAnim = useRef(new Animated.ValueXY()).current;
+  // Local state for sortable grid data
+  const [localPhotos, setLocalPhotos] = useState<Photo[]>(() =>
+    [...photos].sort((a, b) => a.position - b.position)
+  );
+  const reorderingRef = useRef(false);
 
-  // Use refs so PanResponder always sees the latest values
-  const draggingRef = useRef<number | null>(null);
-  const hoverRef = useRef<number | null>(null);
-  const sortedRef = useRef<Photo[]>([]);
-
-  const sortedPhotos = [...photos].sort((a, b) => a.position - b.position);
-  sortedRef.current = sortedPhotos;
-
-  const getSlotPosition = useCallback((index: number) => {
-    const col = index % GRID_COLUMNS;
-    const row = Math.floor(index / GRID_COLUMNS);
-    return {
-      x: col * (itemWidth + GRID_GAP),
-      y: row * (itemHeight + GRID_GAP),
-    };
-  }, [itemWidth, itemHeight]);
-
-  const getIndexFromPosition = useCallback((px: number, py: number) => {
-    const col = Math.min(Math.max(Math.round(px / (itemWidth + GRID_GAP)), 0), GRID_COLUMNS - 1);
-    const maxRows = Math.ceil(Config.maxPhotos / GRID_COLUMNS);
-    const row = Math.min(Math.max(Math.round(py / (itemHeight + GRID_GAP)), 0), maxRows - 1);
-    return row * GRID_COLUMNS + col;
-  }, [itemWidth, itemHeight]);
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => false,
-      onMoveShouldSetPanResponder: (_, gesture) =>
-        draggingRef.current !== null && (Math.abs(gesture.dx) > 5 || Math.abs(gesture.dy) > 5),
-      onPanResponderGrant: () => {},
-      onPanResponderMove: (_, gesture) => {
-        const di = draggingRef.current;
-        if (di === null) return;
-        dragAnim.setValue({ x: gesture.dx, y: gesture.dy });
-        const startSlot = getSlotPosition(di);
-        const newIndex = getIndexFromPosition(
-          startSlot.x + gesture.dx,
-          startSlot.y + gesture.dy,
-        );
-        if (newIndex !== hoverRef.current && newIndex < sortedRef.current.length) {
-          hoverRef.current = newIndex;
-          setHoverIndex(newIndex);
-        }
-      },
-      onPanResponderRelease: () => {
-        const di = draggingRef.current;
-        const hi = hoverRef.current;
-        if (di !== null && hi !== null && di !== hi && onReorder) {
-          const newOrder = [...sortedRef.current];
-          const [moved] = newOrder.splice(di, 1);
-          newOrder.splice(hi, 0, moved);
-          onReorder(newOrder);
-        }
-        dragAnim.setValue({ x: 0, y: 0 });
-        draggingRef.current = null;
-        hoverRef.current = null;
-        setDraggingIndex(null);
-        setHoverIndex(null);
-      },
-      onPanResponderTerminate: () => {
-        dragAnim.setValue({ x: 0, y: 0 });
-        draggingRef.current = null;
-        hoverRef.current = null;
-        setDraggingIndex(null);
-        setHoverIndex(null);
-      },
-    })
-  ).current;
+  useEffect(() => {
+    if (reorderingRef.current) return;
+    setLocalPhotos([...photos].sort((a, b) => a.position - b.position));
+  }, [photos]);
 
   const handleRemove = (photo: Photo) => {
     showConfirm({
@@ -114,151 +55,139 @@ export function PhotoGrid({ photos, onAdd, onRemove, onReorder, editable = true 
     });
   };
 
-  const handleLongPress = (index: number) => {
-    if (!editable || !onReorder || sortedPhotos.length < 2) return;
-    draggingRef.current = index;
-    hoverRef.current = index;
-    dragAnim.setValue({ x: 0, y: 0 });
-    setDraggingIndex(index);
-    setHoverIndex(index);
-  };
+  const handleDragEnd = useCallback(
+    ({ data }: { data: Photo[] }) => {
+      reorderingRef.current = true;
+      setLocalPhotos(data);
+      if (onReorder) {
+        onReorder(data);
+        setTimeout(() => { reorderingRef.current = false; }, 3000);
+      }
+    },
+    [onReorder]
+  );
 
-  // Build visual order: if dragging, show the reordered preview (without the dragged photo in its original slot)
-  const getVisualPhotos = () => {
-    if (draggingIndex === null || hoverIndex === null) return sortedPhotos;
-    const preview = [...sortedPhotos];
-    const [moved] = preview.splice(draggingIndex, 1);
-    preview.splice(hoverIndex, 0, moved);
-    return preview;
-  };
+  const renderItem = useCallback<SortableGridRenderItem<Photo>>(
+    ({ item }) => (
+      <View style={[styles.slot, { height: itemHeight }]}>
+        <Image
+          source={{ uri: getPhotoUrl(item.storage_path) }}
+          style={styles.image}
+          contentFit="cover"
+          transition={200}
+        />
+        {localPhotos[0]?.id === item.id && (
+          <View style={styles.primaryBadge}>
+            <Text style={styles.primaryBadgeText}>{t('profile.primaryPhoto')}</Text>
+          </View>
+        )}
+        {editable && (
+          <TouchableOpacity
+            style={styles.removeButton}
+            onPress={() => handleRemove(item)}
+            hitSlop={4}
+          >
+            <Ionicons name="close-circle" size={22} color={Colors.error} />
+          </TouchableOpacity>
+        )}
+      </View>
+    ),
+    [localPhotos, itemHeight, editable, Colors, t]
+  );
 
-  const visualPhotos = getVisualPhotos();
-  const draggedPhoto = draggingIndex !== null ? sortedPhotos[draggingIndex] : null;
-  const dragSlotPos = draggingIndex !== null ? getSlotPosition(draggingIndex) : null;
+  const keyExtractor = useCallback((item: Photo) => item.id, []);
+
+  // Number of empty slots
+  const emptyCount = Config.maxPhotos - localPhotos.length;
 
   return (
-    <View style={{ position: 'relative' }}>
-      <View style={styles.grid} {...panResponder.panHandlers}>
-        {slots.map((slotIndex) => {
-          const photo = slotIndex < visualPhotos.length ? visualPhotos[slotIndex] : null;
-          const isDropTarget = draggingIndex !== null && slotIndex === hoverIndex;
+    <View>
+      {localPhotos.length > 0 && editable && onReorder ? (
+        <Sortable.Grid
+          columns={GRID_COLUMNS}
+          data={localPhotos}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          onDragEnd={handleDragEnd}
+          rowGap={GRID_GAP}
+          columnGap={GRID_GAP}
+          rowHeight={itemHeight}
+        />
+      ) : localPhotos.length > 0 ? (
+        <View style={styles.staticGrid}>
+          {localPhotos.map((photo, idx) => (
+            <View key={photo.id} style={[styles.slot, { width: itemWidth, height: itemHeight }]}>
+              <Image
+                source={{ uri: getPhotoUrl(photo.storage_path) }}
+                style={styles.image}
+                contentFit="cover"
+                transition={200}
+              />
+              {idx === 0 && (
+                <View style={styles.primaryBadge}>
+                  <Text style={styles.primaryBadgeText}>{t('profile.primaryPhoto')}</Text>
+                </View>
+              )}
+              {editable && (
+                <TouchableOpacity
+                  style={styles.removeButton}
+                  onPress={() => handleRemove(photo)}
+                  hitSlop={4}
+                >
+                  <Ionicons name="close-circle" size={22} color={Colors.error} />
+                </TouchableOpacity>
+              )}
+            </View>
+          ))}
+        </View>
+      ) : null}
 
-          if (photo) {
-            // Hide the photo that is being dragged (it's shown as the floating overlay instead)
-            const isBeingDragged = draggingIndex !== null && photo === sortedPhotos[draggingIndex];
-
+      {/* Empty slots */}
+      {editable && emptyCount > 0 && (
+        <View style={styles.emptyRow}>
+          {Array.from({ length: emptyCount }, (_, i) => {
+            const slotIndex = localPhotos.length + i;
             return (
               <TouchableOpacity
-                key={`photo-${slotIndex}`}
-                style={[
-                  styles.slot,
-                  { width: itemWidth, height: itemHeight },
-                  isDropTarget && styles.slotHighlight,
-                  isBeingDragged && { opacity: 0.3 },
-                ]}
-                onLongPress={() => handleLongPress(slotIndex)}
-                delayLongPress={200}
-                activeOpacity={0.8}
+                key={`empty-${slotIndex}`}
+                style={[styles.slot, styles.emptySlot, { width: itemWidth, height: itemHeight }]}
+                onPress={() => onAdd(slotIndex)}
+                activeOpacity={0.7}
               >
-                <Image
-                  source={{ uri: getPhotoUrl(photo.storage_path) }}
-                  style={styles.image}
-                  contentFit="cover"
-                  transition={200}
-                />
+                <Ionicons name="add" size={28} color={Colors.primary} />
                 {slotIndex === 0 && (
-                  <View style={styles.primaryBadge}>
-                    <Text style={styles.primaryBadgeText}>{t('profile.primaryPhoto')}</Text>
-                  </View>
-                )}
-                {editable && draggingIndex === null && (
-                  <TouchableOpacity
-                    style={styles.removeButton}
-                    onPress={() => handleRemove(photo)}
-                    hitSlop={4}
-                  >
-                    <Ionicons name="close-circle" size={22} color={Colors.error} />
-                  </TouchableOpacity>
+                  <Text style={styles.addLabel}>{t('profile.primaryPhoto')}</Text>
                 )}
               </TouchableOpacity>
             );
-          }
-
-          return (
-            <TouchableOpacity
-              key={`empty-${slotIndex}`}
-              style={[styles.slot, styles.emptySlot, { width: itemWidth, height: itemHeight }]}
-              onPress={() => editable && onAdd(slotIndex)}
-              disabled={!editable}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="add" size={28} color={Colors.primary} />
-              {slotIndex === 0 && (
-                <Text style={styles.addLabel}>{t('profile.primaryPhoto')}</Text>
-              )}
-            </TouchableOpacity>
-          );
-        })}
-
-      </View>
-      {/* Floating overlay: the photo being dragged follows the finger — outside grid to avoid overflow:hidden */}
-      {draggedPhoto && dragSlotPos && (
-        <Animated.View
-          pointerEvents="none"
-          style={{
-            width: itemWidth,
-            height: itemHeight,
-            position: 'absolute',
-            left: dragSlotPos.x,
-            top: dragSlotPos.y,
-            zIndex: 10,
-            elevation: 10,
-            opacity: 0.85,
-            borderRadius: 12,
-            overflow: 'hidden',
-            transform: [
-              { translateX: dragAnim.x },
-              { translateY: dragAnim.y },
-              { scale: 1.08 },
-            ],
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.25,
-            shadowRadius: 8,
-          }}
-        >
-          <Image
-            source={{ uri: getPhotoUrl(draggedPhoto.storage_path) }}
-            style={styles.image}
-            contentFit="cover"
-          />
-        </Animated.View>
+          })}
+        </View>
       )}
-      {editable && photos.length >= 2 && (
+
+      {editable && localPhotos.length >= 2 && (
         <Text style={styles.reorderHint}>{t('profile.reorderHint')}</Text>
       )}
     </View>
   );
 }
 
-const slots = Array.from({ length: Config.maxPhotos }, (_, i) => i);
-
 function makeStyles(c: ReturnType<typeof useColors>) {
   return StyleSheet.create({
-    grid: {
+    staticGrid: {
       flexDirection: 'row',
       flexWrap: 'wrap',
       gap: GRID_GAP,
-      position: 'relative',
+    },
+    emptyRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: GRID_GAP,
+      marginTop: GRID_GAP,
     },
     slot: {
       borderRadius: 12,
       overflow: 'hidden',
       position: 'relative',
-    },
-    slotHighlight: {
-      borderWidth: 2,
-      borderColor: c.primary,
     },
     emptySlot: {
       backgroundColor: c.surfaceSecondary,

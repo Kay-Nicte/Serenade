@@ -783,11 +783,18 @@
     "planDeleted": "Plano eliminado",
     "errorCreating": "Não foi possível criar o plano",
     "errorJoining": "Não foi possível juntar-se ao plano",
+    "mustVerify": "Verifica o teu perfil para te juntares a planos",
+    "planFull": "Este plano está completo",
     "errorLeaving": "Não foi possível sair do plano",
     "deleteConfirm": "Eliminar este plano?",
     "yourPlan": "O teu plano",
     "when": "Quando",
     "where": "Onde",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "edit": "Editar plano",
+    "kick": "Expulsar",
+    "kicked": "Expulsa do plano",
+    "kickConfirmTitle": "Expulsar",
+    "kickConfirm": "Expulsar {{name}} do plano?"
   }
 }

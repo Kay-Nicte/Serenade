@@ -783,11 +783,18 @@
     "planDeleted": "Plana ezabatuta",
     "errorCreating": "Ezin izan da plana sortu",
     "errorJoining": "Ezin izan da planera batu",
+    "mustVerify": "Egiaztatu zure profila planetara batzeko",
+    "planFull": "Plan hau beteta dago",
     "errorLeaving": "Ezin izan da planetik irten",
     "deleteConfirm": "Plan hau ezabatu?",
     "yourPlan": "Zure plana",
     "when": "Noiz",
     "where": "Non",
-    "delete": "Ezabatu"
+    "delete": "Ezabatu",
+    "edit": "Plana editatu",
+    "kick": "Kanporatu",
+    "kicked": "Planetik kanporatua",
+    "kickConfirmTitle": "Kanporatu",
+    "kickConfirm": "{{name}} planetik kanporatu?"
   }
 }

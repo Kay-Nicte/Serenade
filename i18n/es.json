@@ -783,11 +783,18 @@
     "planDeleted": "Plan eliminado",
     "errorCreating": "No se pudo crear el plan",
     "errorJoining": "No se pudo unir al plan",
+    "mustVerify": "Verifica tu perfil para unirte a planes",
+    "planFull": "Este plan está completo",
     "errorLeaving": "No se pudo salir del plan",
     "deleteConfirm": "¿Eliminar este plan?",
     "yourPlan": "Tu plan",
     "when": "Cuándo",
     "where": "Dónde",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "edit": "Editar plan",
+    "kick": "Expulsar",
+    "kicked": "Expulsada del plan",
+    "kickConfirmTitle": "Expulsar",
+    "kickConfirm": "¿Expulsar a {{name}} del plan?"
   }
 }

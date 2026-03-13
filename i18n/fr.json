@@ -783,11 +783,18 @@
     "planDeleted": "Plan supprimé",
     "errorCreating": "Impossible de créer le plan",
     "errorJoining": "Impossible de rejoindre le plan",
+    "mustVerify": "Vérifie ton profil pour rejoindre des plans",
+    "planFull": "Ce plan est complet",
     "errorLeaving": "Impossible de quitter le plan",
     "deleteConfirm": "Supprimer ce plan ?",
     "yourPlan": "Ton plan",
     "when": "Quand",
     "where": "Où",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "edit": "Modifier le plan",
+    "kick": "Retirer",
+    "kicked": "Retirée du plan",
+    "kickConfirmTitle": "Retirer",
+    "kickConfirm": "Retirer {{name}} du plan ?"
   }
 }

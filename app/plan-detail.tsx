@@ -10,13 +10,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
-  Alert,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { showConfirm } from '@/components/ConfirmDialog';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
@@ -79,15 +80,25 @@ export default function PlanDetailScreen() {
     return Colors.primaryDark;
   };
 
+  const getCategoryLabel = (cat: string) => {
+    if (cat === 'viajes') return t('plans.categoryTravel');
+    if (cat === 'cultura') return t('plans.categoryCulture');
+    return t('plans.categoryLeisure');
+  };
+
   const handleJoin = async () => {
     if (!id) return;
     setActionLoading(true);
     const result = await joinPlan(id);
     if (result.success) {
-      showToast('Te has unido al plan', 'success');
+      showToast(t('plans.joined'), 'success');
       fetchAttendees();
+    } else if (result.error?.includes('verified')) {
+      showToast(t('plans.mustVerify'), 'error');
+    } else if (result.error?.includes('full')) {
+      showToast(t('plans.planFull'), 'error');
     } else {
-      showToast('Error al unirte', 'error');
+      showToast(t('plans.errorJoining'), 'error');
     }
     setActionLoading(false);
   };
@@ -97,34 +108,56 @@ export default function PlanDetailScreen() {
     setActionLoading(true);
     const result = await leavePlan(id);
     if (result.success) {
-      showToast('Has salido del plan', 'success');
+      showToast(t('plans.left'), 'success');
       fetchAttendees();
     } else {
-      showToast('Error al salir', 'error');
+      showToast(t('plans.errorLeaving'), 'error');
     }
     setActionLoading(false);
   };
 
-  const handleDelete = () => {
-    Alert.alert('Eliminar plan', '\u00BFEst\u00E1s seguro de que quieres eliminar este plan?', [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Eliminar',
-        style: 'destructive',
-        onPress: async () => {
-          if (!id) return;
-          setActionLoading(true);
-          const result = await deletePlan(id);
-          if (result.success) {
-            showToast('Plan eliminado', 'success');
-            router.back();
-          } else {
-            showToast('Error al eliminar', 'error');
-          }
-          setActionLoading(false);
-        },
+  const handleKick = (attendee: Attendee) => {
+    showConfirm({
+      title: t('plans.kickConfirmTitle'),
+      message: t('plans.kickConfirm', { name: attendee.name }),
+      confirmLabel: t('plans.kick'),
+      destructive: true,
+      onConfirm: async () => {
+        try {
+          const { error } = await supabase.rpc('kick_plan_attendee', {
+            p_plan_id: id,
+            p_user_id: attendee.id,
+          });
+          if (error) throw error;
+          showToast(t('plans.kicked'), 'success');
+          fetchAttendees();
+          usePlansStore.getState().fetchPlans();
+        } catch {
+          showToast('Error', 'error');
+        }
       },
-    ]);
+    });
+  };
+
+  const handleDelete = () => {
+    showConfirm({
+      title: t('plans.delete'),
+      message: t('plans.deleteConfirm'),
+      confirmLabel: t('plans.delete'),
+      destructive: true,
+      onConfirm: async () => {
+        if (!id) return;
+        setActionLoading(true);
+        const result = await deletePlan(id);
+        if (result.success) {
+          showToast(t('plans.planDeleted'), 'success');
+          router.back();
+        } else {
+          showToast(result.error || 'Error', 'error');
+        }
+        setActionLoading(false);
+      },
+    });
   };
 
   if (!plan) {
@@ -160,7 +193,7 @@ export default function PlanDetailScreen() {
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <View style={[styles.categoryBadge, { backgroundColor: getCategoryColor(plan.category) }]}>
             <Text style={styles.categoryBadgeText}>
-              {plan.category.charAt(0).toUpperCase() + plan.category.slice(1)}
+              {getCategoryLabel(plan.category)}
             </Text>
           </View>
 
@@ -168,7 +201,7 @@ export default function PlanDetailScreen() {
 
           <View style={styles.infoRow}>
             <Ionicons name="person-outline" size={16} color={Colors.textSecondary} />
-            <Text style={styles.infoText}>Creado por {plan.creator_name}</Text>
+            <Text style={styles.infoText}>{t('plans.createdBy', { name: plan.creator_name })}</Text>
           </View>
 
           <View style={styles.infoRow}>
@@ -192,39 +225,54 @@ export default function PlanDetailScreen() {
             <View style={styles.infoRow}>
               <Ionicons name="people-outline" size={16} color={Colors.textSecondary} />
               <Text style={styles.infoText}>
-                {plan.attendee_count}/{plan.max_attendees} asistentes
+                {plan.attendee_count}/{plan.max_attendees} {t('plans.attendees', { count: plan.attendee_count })}
               </Text>
             </View>
           )}
 
           {plan.description ? (
             <View style={styles.descriptionSection}>
-              <Text style={styles.sectionTitle}>Descripci\u00F3n</Text>
+              <Text style={styles.sectionTitle}>{t('plans.descriptionLabel')}</Text>
               <Text style={styles.description}>{plan.description}</Text>
             </View>
           ) : null}
 
           <View style={styles.attendeesSection}>
             <Text style={styles.sectionTitle}>
-              Asistentes ({plan.attendee_count})
+              {t('plans.attendees', { count: plan.attendee_count })}
             </Text>
             {loadingAttendees ? (
               <ActivityIndicator size="small" color={Colors.primary} style={{ marginTop: 12 }} />
             ) : attendees.length === 0 ? (
-              <Text style={styles.noAttendeesText}>A\u00FAn no hay asistentes</Text>
+              <Text style={styles.noAttendeesText}>{t('plans.empty')}</Text>
             ) : (
               <View style={styles.attendeesList}>
                 {attendees.map((a, i) => (
                   <View key={a.id} style={styles.attendeeItem}>
-                    <View
-                      style={[
-                        styles.attendeeAvatar,
-                        { backgroundColor: AVATAR_COLORS[i % AVATAR_COLORS.length] },
-                      ]}
+                    <TouchableOpacity
+                      style={styles.attendeeProfile}
+                      onPress={() => router.push({ pathname: '/match-profile', params: { userId: a.id } } as any)}
+                      activeOpacity={0.7}
                     >
-                      <Text style={styles.attendeeInitials}>{getInitials(a.name)}</Text>
-                    </View>
-                    <Text style={styles.attendeeName}>{a.name}</Text>
+                      {a.avatar_url ? (
+                        <Image source={{ uri: a.avatar_url }} style={styles.attendeeAvatar} />
+                      ) : (
+                        <View
+                          style={[
+                            styles.attendeeAvatar,
+                            { backgroundColor: AVATAR_COLORS[i % AVATAR_COLORS.length] },
+                          ]}
+                        >
+                          <Text style={styles.attendeeInitials}>{getInitials(a.name)}</Text>
+                        </View>
+                      )}
+                      <Text style={styles.attendeeName}>{a.name}</Text>
+                    </TouchableOpacity>
+                    {plan.is_creator && a.id !== plan.creator_id && (
+                      <TouchableOpacity onPress={() => handleKick(a)} hitSlop={8} activeOpacity={0.7}>
+                        <Ionicons name="close-circle-outline" size={22} color={Colors.textTertiary} />
+                      </TouchableOpacity>
+                    )}
                   </View>
                 ))}
               </View>
@@ -232,25 +280,30 @@ export default function PlanDetailScreen() {
           </View>
 
           <View style={styles.actions}>
+            {plan.is_creator && plan.attendee_count <= 1 && (
+              <Button
+                title={t('plans.edit')}
+                onPress={() => router.push(`/edit-plan?id=${plan.id}` as any)}
+                style={{ marginBottom: 12 }}
+              />
+            )}
             {plan.is_creator ? (
               <Button
-                title="Eliminar plan"
+                title={t('plans.delete')}
                 onPress={handleDelete}
                 variant="outline"
                 loading={actionLoading}
-                textStyle={{ color: Colors.error }}
-                style={{ borderColor: Colors.error }}
               />
             ) : plan.is_joined ? (
               <Button
-                title="Salir del plan"
+                title={t('plans.leave')}
                 onPress={handleLeave}
                 variant="outline"
                 loading={actionLoading}
               />
             ) : (
               <Button
-                title="Unirme al plan"
+                title={t('plans.join')}
                 onPress={handleJoin}
                 loading={actionLoading}
               />
@@ -352,7 +405,13 @@ function makeStyles(c: ReturnType<typeof useColors>) {
     attendeeItem: {
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    attendeeProfile: {
+      flexDirection: 'row',
+      alignItems: 'center',
       gap: 12,
+      flex: 1,
     },
     attendeeAvatar: {
       width: 36,

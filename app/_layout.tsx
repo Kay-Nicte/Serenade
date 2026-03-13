@@ -27,6 +27,7 @@ import { OfflineBanner } from '@/components/OfflineBanner';
 import { Toast } from '@/components/Toast';
 import { useToastStore, showToast } from '@/stores/toastStore';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useTranslation } from 'react-i18next';
 import '@/i18n';
 
@@ -293,34 +294,36 @@ export default function RootLayout() {
       animationType="fade"
       autoHide={false}
     >
-      <ErrorBoundary>
-        {!isConnected && <OfflineBanner />}
-        <AuthGuard>
-          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: Colors.background } }}>
-            <Stack.Screen name="(auth)" />
-            <Stack.Screen name="complete-profile" />
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="reset-password" />
-            <Stack.Screen name="discovery-preferences" />
-            <Stack.Screen name="blocked-users" />
-            <Stack.Screen name="admin-profile" />
-            <Stack.Screen name="settings" />
-            <Stack.Screen name="change-password" />
-            <Stack.Screen name="terms-of-service" />
-            <Stack.Screen name="privacy-policy" />
-            <Stack.Screen name="match-profile" options={{ presentation: 'modal' }} />
-            <Stack.Screen name="verify-identity" options={{ presentation: 'modal' }} />
-            <Stack.Screen name="admin-verification" />
-            <Stack.Screen name="manage-moderators" />
-            <Stack.Screen name="admin-audit-log" />
-            <Stack.Screen name="premium" options={{ presentation: 'modal' }} />
-            <Stack.Screen name="buy-boost" options={{ presentation: 'modal' }} />
-          </Stack>
-          <StatusBar style={statusBarStyle} />
-        </AuthGuard>
-        <GlobalToast />
-        <GlobalConfirmDialog />
-      </ErrorBoundary>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ErrorBoundary>
+          {!isConnected && <OfflineBanner />}
+          <AuthGuard>
+            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: Colors.background } }}>
+              <Stack.Screen name="(auth)" />
+              <Stack.Screen name="complete-profile" />
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="reset-password" />
+              <Stack.Screen name="discovery-preferences" />
+              <Stack.Screen name="blocked-users" />
+              <Stack.Screen name="admin-profile" />
+              <Stack.Screen name="settings" />
+              <Stack.Screen name="change-password" />
+              <Stack.Screen name="terms-of-service" />
+              <Stack.Screen name="privacy-policy" />
+              <Stack.Screen name="match-profile" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="verify-identity" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="admin-verification" />
+              <Stack.Screen name="manage-moderators" />
+              <Stack.Screen name="admin-audit-log" />
+              <Stack.Screen name="premium" options={{ presentation: 'modal' }} />
+              <Stack.Screen name="buy-boost" options={{ presentation: 'modal' }} />
+            </Stack>
+            <StatusBar style={statusBarStyle} />
+          </AuthGuard>
+          <GlobalToast />
+          <GlobalConfirmDialog />
+        </ErrorBoundary>
+      </GestureHandlerRootView>
     </ExpoFullscreenSplash>
   );
 }

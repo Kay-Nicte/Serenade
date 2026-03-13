@@ -19,13 +19,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ResponsiveContainer } from '@/components/ResponsiveContainer';
 
 const FILTERS: PlanCategory[] = ['todos', 'cerca', 'viajes', 'ocio', 'cultura'];
-const FILTER_LABELS: Record<PlanCategory, string> = {
-  todos: 'Todos',
-  cerca: 'Cerca',
-  viajes: 'Viajes',
-  ocio: 'Ocio',
-  cultura: 'Cultura',
-};
+function useFilterLabels(): Record<PlanCategory, string> {
+  const { t } = useTranslation();
+  return {
+    todos: t('plans.categoryAll'),
+    cerca: t('plans.categoryNearby'),
+    viajes: t('plans.categoryTravel'),
+    ocio: t('plans.categoryLeisure'),
+    cultura: t('plans.categoryCulture'),
+  };
+}
 
 const AVATAR_COLORS = ['#E8A0BF', '#BA90C6', '#C0DBEA', '#DCCCBB', '#A8D8B9', '#F2C57C'];
 
@@ -40,6 +43,7 @@ function getInitials(name: string): string {
 
 export default function PlansScreen() {
   const { t } = useTranslation();
+  const FILTER_LABELS = useFilterLabels();
   const Colors = useColors();
   const styles = makeStyles(Colors);
   const router = useRouter();
@@ -89,18 +93,21 @@ export default function PlansScreen() {
       <Text style={styles.cardTitle}>{item.title}</Text>
 
       <View style={styles.cardRow}>
-        <Text style={styles.cardDetail}>{'\u{1F4CD}'} {item.location_name}</Text>
+        <Ionicons name="location-outline" size={15} color={Colors.textSecondary} />
+        <Text style={styles.cardDetail}>{item.location_name}</Text>
       </View>
       <View style={styles.cardRow}>
+        <Ionicons name="calendar-outline" size={15} color={Colors.textSecondary} />
         <Text style={styles.cardDetail}>
-          {'\u{1F4C5}'} {new Date(item.event_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+          {new Date(item.event_date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
         </Text>
       </View>
 
       {item.distance_km != null && (
         <View style={styles.cardRow}>
+          <Ionicons name="navigate-outline" size={15} color={Colors.textSecondary} />
           <Text style={styles.cardDetail}>
-            {'\u{1F4CF}'} {item.distance_km < 1 ? `${Math.round(item.distance_km * 1000)} m` : `${item.distance_km.toFixed(1)} km`}
+            {item.distance_km < 1 ? `${Math.round(item.distance_km * 1000)} m` : `${item.distance_km.toFixed(1)} km`}
           </Text>
         </View>
       )}
@@ -167,8 +174,7 @@ export default function PlansScreen() {
         ) : plans.length === 0 ? (
           <View style={styles.centered}>
             <Ionicons name="calendar-outline" size={64} color={Colors.primaryLight} />
-            <Text style={styles.emptyText}>No hay planes todav\u00EDa</Text>
-            <Text style={styles.emptySubtext}>{'\u00A1'}Crea el primero!</Text>
+            <Text style={styles.emptyText}>{t('plans.empty')}</Text>
           </View>
         ) : (
           <FlatList
@@ -247,6 +253,7 @@ function makeStyles(c: ReturnType<typeof useColors>) {
       fontSize: 16,
       fontFamily: Fonts.bodySemiBold,
       color: c.textSecondary,
+      textAlign: 'center',
     },
     emptySubtext: {
       fontSize: 14,
@@ -259,7 +266,7 @@ function makeStyles(c: ReturnType<typeof useColors>) {
       gap: 16,
     },
     card: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: c.surface,
       borderRadius: 16,
       padding: 16,
       borderWidth: 1,
@@ -286,6 +293,7 @@ function makeStyles(c: ReturnType<typeof useColors>) {
     cardRow: {
       flexDirection: 'row',
       alignItems: 'center',
+      gap: 6,
       marginBottom: 4,
     },
     cardDetail: {
